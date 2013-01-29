@@ -25,6 +25,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionQuit_triggered()
 {
+    //have to disconnect the player before close
+    server_disconnection(_socket_descriptor);
+
     this->close();
 }
 
@@ -37,12 +40,7 @@ void MainWindow::serverConnection(QString host, int port)
 
     //TODO integrate the client/server code for connection
     qDebug() << "initializing the host";
-    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
-             << QString(_local_addr.sin_port) << " | ";
     init_host(_ptr_host, (char*)host.toStdString().c_str(), &_local_addr);
-
-    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
-             << QString(_local_addr.sin_port) << " | ";
 
     qDebug() << "Assigning a port to the client";
     assign_port(&_local_addr, port);
@@ -51,10 +49,6 @@ void MainWindow::serverConnection(QString host, int port)
     create_socket(&_socket_descriptor);
 
     qDebug() << "Connecting the client to the server";
-    qDebug() << "socket_descriptor : " << _socket_descriptor;
-    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
-             << QString(_local_addr.sin_port) << " | ";
-
     server_connection(_socket_descriptor, _local_addr);
 
     qDebug() << "Client is connected";
@@ -68,6 +62,9 @@ void MainWindow::serverConnection(QString host, int port)
 void MainWindow::serverDisconnection()
 {
     // TODO integrate the client/server code for disconnection
+    server_disconnection(_socket_descriptor);
+    qDebug() << "Client is disconnected";
+
 
     // When the client is disconnected, display the connection page
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);

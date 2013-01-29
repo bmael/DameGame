@@ -42,6 +42,11 @@ void create_socket(int * socket_descriptor);
  */
 void server_connection(int socket_descriptor, sockaddr_in local_addr);
 
+/**
+ * @brief Disconnects the client.
+ * @param socket_descriptor
+ */
+void server_disconnection(int socket_descriptor);
 
 
 #endif

@@ -28,3 +28,7 @@ void server_connection(int socket_descriptor, sockaddr_in local_addr){
         exit(1);
     }
 }
+
+void server_disconnection(int socket_descriptor){
+    close(socket_descriptor);
+}
