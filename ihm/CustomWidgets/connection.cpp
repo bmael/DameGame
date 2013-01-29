@@ -28,5 +28,15 @@ void Connection::paintEvent(QPaintEvent *)
 
 void Connection::on_connectPushButton_clicked()
 {
-    emit askConnection(ui->serverLineEdit->text(), ui->portLineEdit->text().toInt());
+    emit askConnection(ui->serverLineEdit->text(),
+                       ui->portLineEdit->text().toInt(),
+                       ui->pseudoLineEdit->text());
+}
+
+
+void Connection::clean()
+{
+    ui->serverLineEdit->clear();
+    ui->portLineEdit->clear();
+    ui->pseudoLineEdit->clear();
 }

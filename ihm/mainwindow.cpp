@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Connect Connection Widget with the window
-    connect(ui->connectionWidget, SIGNAL(askConnection(QString, int)), this, SLOT(serverConnection(QString, int)));
+    connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
+            this, SLOT(serverConnection(QString, int, QString)));
 
     // Configure disconnection of the user
     connect(ui->rightMenuWidget, SIGNAL(askDisconnection()), this, SLOT(serverDisconnection()));
@@ -34,11 +35,10 @@ void MainWindow::on_actionQuit_triggered()
 /**
  * @brief Connects the client to the server.
  */
-void MainWindow::serverConnection(QString host, int port)
+void MainWindow::serverConnection(QString host, int port, QString pseudo)
 {
-    host = "localhost";
+    _player.name = (char*)pseudo.toStdString().c_str();
 
-    //TODO integrate the client/server code for connection
     qDebug() << "initializing the host";
     init_host(_ptr_host, (char*)host.toStdString().c_str(), &_local_addr);
 
@@ -61,10 +61,11 @@ void MainWindow::serverConnection(QString host, int port)
 
 void MainWindow::serverDisconnection()
 {
-    // TODO integrate the client/server code for disconnection
+    // cleaning the connection page
+    ui->connectionWidget->clean();
+
     server_disconnection(_socket_descriptor);
     qDebug() << "Client is disconnected";
-
 
     // When the client is disconnected, display the connection page
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);

@@ -16,11 +16,13 @@ public:
     explicit Connection(QWidget *parent = 0);
     ~Connection();
     
+    void clean();
+
 protected:
     void paintEvent(QPaintEvent *); // Override of painEvent.
 
 signals:
-    void askConnection(QString host, int port);
+    void askConnection(QString host, int port, QString pseudo);
 
 private slots:
     void on_connectPushButton_clicked();

@@ -6,6 +6,7 @@
 #ifdef __cplusplus
 extern "C" {
 #include "../DameGame/client.h"
+#include "../DameGame/structures.h"
 }
 #endif
 
@@ -22,7 +23,7 @@ public:
     ~MainWindow();
     
 private slots:
-    void serverConnection(QString host, int port);
+    void serverConnection(QString host, int port, QString pseudo);
     void serverDisconnection();
 
     void on_actionQuit_triggered();
@@ -37,6 +38,9 @@ private:
     sockaddr_in _local_addr;    // local adress of the client
     hostent *_ptr_host; 		// information about host machine
     servent *_ptr_service;      // information about a service
+
+    player _player;// the player
+
 };
 
 #endif // MAINWINDOW_H
