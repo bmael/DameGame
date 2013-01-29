@@ -36,19 +36,29 @@ void MainWindow::serverConnection(QString host, int port)
     host = "localhost";
 
     //TODO integrate the client/server code for connection
-
+    qDebug() << "initializing the host";
+    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
+             << QString(_local_addr.sin_port) << " | ";
     init_host(_ptr_host, (char*)host.toStdString().c_str(), &_local_addr);
 
-//    cpy_hostinfo(_ptr_host, &_local_addr);
+    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
+             << QString(_local_addr.sin_port) << " | ";
+
+    qDebug() << "Assigning a port to the client";
     assign_port(&_local_addr, port);
 
-//    qDebug() << "Before socket : " << _socket_descriptor;
-
+    qDebug() << "Creating a socket";
     create_socket(&_socket_descriptor);
 
-//    qDebug() << "After : " << _socket_descriptor;
+    qDebug() << "Connecting the client to the server";
+    qDebug() << "socket_descriptor : " << _socket_descriptor;
+    qDebug() << "local_addresse : " << QString(_local_addr.sin_family) << " | "
+             << QString(_local_addr.sin_port) << " | ";
 
     server_connection(_socket_descriptor, _local_addr);
+
+    qDebug() << "Client is connected";
+
 
     // When the client is connected, display the mainPage
     ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);

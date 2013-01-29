@@ -25,15 +25,6 @@ typedef struct servent 		servent;
  */
 void init_host(hostent *ptr_host, char * host, sockaddr_in *local_addr);
 
-
-/**
- * @brief Copies the host information into the the local adress
- * @param ptr_host
- * @param local_addr
- */
-void cpy_hostinfo(hostent *ptr_host, sockaddr_in *local_addr);
-
-
 /**
  * @brief Assigns a port to the client
  * @param local_addr

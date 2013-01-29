@@ -7,14 +7,8 @@ void init_host(hostent * ptr_host, char * host, sockaddr_in *local_addr){
             perror("[init_host] : can't find the server with the given host");
             exit(1);
         }
-        bcopy((char*)ptr_host->h_addr_list, (char*)&local_addr->sin_addr, ptr_host->h_length);
+        bcopy((char*)ptr_host->h_addr, (char*)&local_addr->sin_addr, ptr_host->h_length);
         local_addr->sin_family = AF_INET; // or ptr_host->h_addrtype;
-}
-
-void cpy_hostinfo(hostent * ptr_host, sockaddr_in *local_addr){
-
-//    bcopy((char*)ptr_host->h_addr_list, (char*)&local_addr->sin_addr, ptr_host->h_length);
-//    local_addr->sin_family = AF_INET; // or ptr_host->h_addrtype;
 }
 
 void assign_port(sockaddr_in *local_addr, int port){

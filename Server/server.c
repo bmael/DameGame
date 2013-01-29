@@ -1,4 +1,4 @@
-/*----------------------------------------------
+﻿/*----------------------------------------------
 Serveur à lancer avant le client
 ------------------------------------------------*/
 #include <stdlib.h>
@@ -31,28 +31,29 @@ void * renvoi (void * sock) {
   printf("Socket : %d\n", nouv_socket_descriptor);
   
   
-  if ( (longueur = read(nouv_socket_descriptor, buffer, sizeof(buffer))) <= 0 ) {
-    return;
-  }
+//  if ( (longueur = read(nouv_socket_descriptor, buffer, sizeof(buffer))) <= 0 ) {
+//    return;
+//  }
   
-  printf("Message lu : %s \n", buffer);
+//  printf("Message lu : %s \n", buffer);
   
-  buffer[0] = 'R';
-  buffer[1] = 'E';
-  buffer[longueur] = '#';
-  buffer[longueur+1] = '\0';
+//  buffer[0] = 'R';
+//  buffer[1] = 'E';
+//  buffer[longueur] = '#';
+//  buffer[longueur+1] = '\0';
   
-  printf("Message après traitement : %s \n", buffer);
+//  printf("Message après traitement : %s \n", buffer);
   
-  printf("Renvoi de message traité.\n");
+//  printf("Renvoi de message traité.\n");
   
-  /* Mise en attente du programme pour simuler un délai de transmission */
-  sleep(3);
-  
-  write(nouv_socket_descriptor, buffer, strlen(buffer)+1);
-  printf("Message envoyé.\n");
 
-  close(nouv_socket_descriptor);
+  /* Mise en attente du programme pour simuler un délai de transmission */
+//  sleep(3);
+  
+//  write(nouv_socket_descriptor, buffer, strlen(buffer)+1);
+//  printf("Message envoyé.\n");
+
+//  close(nouv_socket_descriptor);
 
   return;
 }
@@ -103,7 +104,7 @@ int main(int argc, char **argv) {
   /*------------------------------------------------------------*/
   /* SOLUTION 2 : Utiliser un nouveau numéro de port            */
   /*------------------------------------------------------------*/
-  adresse_locale.sin_port = htons(5001);
+  adresse_locale.sin_port = htons(5000);
   
   /*------------------------------------------------------------*/
   
