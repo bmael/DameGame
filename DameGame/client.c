@@ -26,9 +26,25 @@ void server_connection(int socket_descriptor, sockaddr_in local_addr){
     if(connect(socket_descriptor, (sockaddr*)(&local_addr), sizeof(local_addr)) < 0){
         perror("[server_connection] : can't establish a connection with the server");
         exit(1);
-    }
+    }   
 }
 
 void server_disconnection(int socket_descriptor){
     close(socket_descriptor);
+}
+
+void send_client_information(int socket_descriptor, char* pbuf){
+    if((write(socket_descriptor, pbuf, strlen(pbuf))) < 0){
+        perror("[send_client_information] : Can't write the message to send to the server");
+        exit(1);
+    }
+}
+
+void read_server_information(int socket_descriptor){
+    char buffer[256];
+    int length;
+    while((length = read(socket_descriptor, buffer, sizeof(buffer))) > 0){
+        printf("answer of the server : \n");
+        write(1, buffer, length);
+    }
 }

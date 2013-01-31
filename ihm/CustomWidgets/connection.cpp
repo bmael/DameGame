@@ -36,7 +36,7 @@ void Connection::on_connectPushButton_clicked()
 
 void Connection::clean()
 {
-    ui->serverLineEdit->clear();
-    ui->portLineEdit->clear();
+//    ui->serverLineEdit->clear();
+//    ui->portLineEdit->clear();
     ui->pseudoLineEdit->clear();
 }

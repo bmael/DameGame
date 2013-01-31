@@ -37,7 +37,8 @@ void MainWindow::on_actionQuit_triggered()
  */
 void MainWindow::serverConnection(QString host, int port, QString pseudo)
 {
-    _player.name = (char*)pseudo.toStdString().c_str();
+    _player.name = new char[200];
+    strcpy(_player.name, pseudo.toStdString().c_str());
 
     qDebug() << "initializing the host";
     init_host(_ptr_host, (char*)host.toStdString().c_str(), &_local_addr);
@@ -53,6 +54,11 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
 
     qDebug() << "Client is connected";
 
+    // Send the pseudo of the client to the server
+    qDebug() << "Sending client information...";
+    qDebug() << "player : " << _player.name;
+    char action[256] = "addClient:";
+    send_client_information(_socket_descriptor, strcat(action,_player.name));
 
     // When the client is connected, display the mainPage
     ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
@@ -64,8 +70,12 @@ void MainWindow::serverDisconnection()
     // cleaning the connection page
     ui->connectionWidget->clean();
 
+    char action[256] = "removeClient:";
+    send_client_information(_socket_descriptor, strcat(action,_player.name));
     server_disconnection(_socket_descriptor);
+
     qDebug() << "Client is disconnected";
+    free(_player.name);
 
     // When the client is disconnected, display the connection page
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);

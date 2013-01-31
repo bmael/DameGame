@@ -9,9 +9,6 @@
 #include <string.h>
 
 
-
-
-
 typedef struct sockaddr 	sockaddr;
 typedef struct sockaddr_in 	sockaddr_in;
 typedef struct hostent 		hostent;
@@ -39,6 +36,8 @@ void create_socket(int * socket_descriptor);
 
 /**
  * @brief Connects the client to the server.
+ * @param socket_descriptor
+ * @param local_addr
  */
 void server_connection(int socket_descriptor, sockaddr_in local_addr);
 
@@ -48,5 +47,18 @@ void server_connection(int socket_descriptor, sockaddr_in local_addr);
  */
 void server_disconnection(int socket_descriptor);
 
+/**
+ * @brief Send some information from the client to the server.
+ * @param socket_descriptor
+ * @param pbuf
+ */
+void send_client_information(int socket_descriptor, char* pbuf);
+
+/**
+ * @brief Read information from the server
+ * @param socket_descriptor
+ * @param pbuf
+ */
+void read_server_information(int socket_descriptor);
 
 #endif

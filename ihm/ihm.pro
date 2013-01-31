@@ -13,6 +13,7 @@ TARGET = ../Game
 TEMPLATE = app
 
 include($$PWD/CustomWidgets/CustomWidgets.pri)
+include($$PWD/Threads/Threads.pri)
 
 LIBS += ../DameGame/libDameGame.a
 
