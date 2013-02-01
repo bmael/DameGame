@@ -40,11 +40,14 @@ void send_client_information(int socket_descriptor, char* pbuf){
     }
 }
 
-void read_server_information(int socket_descriptor){
+char* read_server_information(int socket_descriptor){
     char buffer[256];
     int length;
-    while((length = read(socket_descriptor, buffer, sizeof(buffer))) > 0){
+    if((length = read(socket_descriptor, buffer, sizeof(buffer))) > 0){
         printf("answer of the server : \n");
-        write(1, buffer, length);
+        return buffer;
+        //write(1, strcat(buffer, "plop"), length);
+
     }
+    return NULL;
 }

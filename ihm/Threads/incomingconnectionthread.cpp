@@ -1,4 +1,5 @@
 #include "incomingconnectionthread.h"
+#include <QDebug>
 
 IncomingConnectionThread::IncomingConnectionThread(int socket_descriptor, QObject *parent):
     QThread(parent), _socket_descriptor(socket_descriptor)
@@ -16,5 +17,8 @@ void IncomingConnectionThread::run()
 {
     //Listen for incoming connections
     //TODO
-    read_server_information(_socket_descriptor);
+    for(;;){
+        qDebug() << "[IncomingConnectionThread]" <<
+                QString::fromStdString(read_server_information(_socket_descriptor)).toUtf8();
+    }
 }

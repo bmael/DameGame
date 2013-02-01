@@ -3,12 +3,15 @@
 
 #include <QDebug>
 
+#include "Threads/incomingconnectionthread.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    _incomingConnection = NULL;
 
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
@@ -21,13 +24,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete _incomingConnection;
     delete ui;
 }
 
 void MainWindow::on_actionQuit_triggered()
 {
     //have to disconnect the player before close
+
     server_disconnection(_socket_descriptor);
+
+    delete _incomingConnection;
 
     this->close();
 }
@@ -53,6 +60,10 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     server_connection(_socket_descriptor, _local_addr);
 
     qDebug() << "Client is connected";
+
+    // We start a thread to listen for all incoming connections
+     _incomingConnection =
+            new IncomingConnectionThread(_socket_descriptor);
 
     // Send the pseudo of the client to the server
     qDebug() << "Sending client information...";

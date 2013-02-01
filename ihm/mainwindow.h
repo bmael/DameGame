@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "Threads/incomingconnectionthread.h"
+
 #ifdef __cplusplus
 extern "C" {
 #include "../DameGame/client.h"
@@ -40,6 +42,9 @@ private:
     servent *_ptr_service;      // information about a service
 
     player _player;// the player
+
+    //Thread for listen incoming connection
+    IncomingConnectionThread * _incomingConnection;
 
 };
 

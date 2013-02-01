@@ -20,6 +20,8 @@ typedef struct sockaddr_in sockaddr_in;
 typedef struct hostent hostent;
 typedef struct servent servent;
 
+int cpt_max_client = 3;		/* Size of the max client for the realloc function */
+
 player *players;		/* Array of connected players */
 int cpt_players = 0;		/* Number of connected players */
 pthread_mutex_t players_mutex;
@@ -67,6 +69,15 @@ void * client_manager(void * sock){
 	pthread_mutex_lock(&players_mutex);
 	printf("adding client...\n");
       
+	
+	// Reallocation of memory if needed
+	if(cpt_players-1 == cpt_max_client){
+	 cpt_max_client *= 2;
+	 realloc(sockets, cpt_max_client * sizeof(int));
+	 realloc(players, cpt_max_client * sizeof(player));
+	}
+	
+	
 	char player_name[200];
 	strtok(buffer, ":");
 	strcpy(player_name, strtok(NULL, ":"));
@@ -79,14 +90,10 @@ void * client_manager(void * sock){
 	
 	cpt_players++;
 	
-	display_online_players();
-
-	
 	/* Advising all client that there is an incoming connection */
 	alert_all_client("incomingConnection");
 	pthread_mutex_unlock(&players_mutex);
-	
-	
+		
     }
         
     /* Remove a client from the player list */
@@ -135,26 +142,22 @@ void alert_all_client(char * command){
   
   printf("Command to execute : %s\n", command);
   
-  int socket_descriptor;
+  int client_socket_descriptor;
   int i;
   for(i = 0; i<cpt_players; i++){
-    socket_descriptor = sockets[i];
+    client_socket_descriptor = sockets[i];
     
     if(strcmp(command,"incomingConnection") == 0){
       printf("---> advising the client[%d]\n", i);
-      printf("---> with socket : %d", socket_descriptor);
-      if((write(socket_descriptor, players[cpt_players-1].name, strlen(players[cpt_players-1].name))) < 0){
+      printf("---> with socket : %d", client_socket_descriptor);
+      if((write(client_socket_descriptor, players[cpt_players-1].name, strlen(players[cpt_players-1].name))) < 0){
 	  perror("[Server_incomingConnection] : Can't write the message to send to the client");
 	  exit(1);
       }
-      printf("Incoming connection : advising client : %d\n", socket_descriptor);
+      printf("Incoming connection : advising client : %d\n", client_socket_descriptor);
     }
-    
-    socket_descriptor = 0;
-
   }
 
-  close(socket_descriptor);
 
 }
 
@@ -179,8 +182,8 @@ int main(int argc, char **argv) {
   pthread_t nouveau_client;	/* Thread for each client */
 
   /* Allocation of memory for players */
-  players = calloc(3, sizeof(player));
-  sockets = calloc(3, sizeof(int));
+  players = calloc(cpt_max_client, sizeof(player));
+  sockets = calloc(cpt_max_client, sizeof(int));
 	
   /* Récupération de la structure d'adresse en récupérant le nom */
   if ( (ptr_hote = gethostbyname(machine)) == NULL ) {
@@ -210,7 +213,7 @@ int main(int argc, char **argv) {
   /*------------------------------------------------------------*/
   /* SOLUTION 2 : Utiliser un nouveau numéro de port            */
   /*------------------------------------------------------------*/
-  adresse_locale.sin_port = htons(5000);
+  adresse_locale.sin_port = htons(5001);
   
   /*------------------------------------------------------------*/
   

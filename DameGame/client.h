@@ -59,6 +59,6 @@ void send_client_information(int socket_descriptor, char* pbuf);
  * @param socket_descriptor
  * @param pbuf
  */
-void read_server_information(int socket_descriptor);
+char* read_server_information(int socket_descriptor);
 
 #endif
