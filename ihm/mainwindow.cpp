@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include <QDebug>
 
 #include "Threads/incomingconnectionthread.h"
@@ -53,8 +56,11 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     qDebug() << "Assigning a port to the client";
     assign_port(&_local_addr, port);
 
+    qDebug() << "Client addr : " << inet_ntoa(_local_addr.sin_addr);
+    qDebug() << "Socket created : " << _socket_descriptor;
+
     qDebug() << "Creating a socket";
-    create_socket(&_socket_descriptor);
+    _socket_descriptor = create_socket();
 
     qDebug() << "Connecting the client to the server";
     server_connection(_socket_descriptor, _local_addr);
@@ -62,14 +68,21 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     qDebug() << "Client is connected";
 
     // We start a thread to listen for all incoming connections
-     _incomingConnection =
-            new IncomingConnectionThread(_socket_descriptor);
+//     _incomingConnection =
+//            new IncomingConnectionThread(_socket_descriptor);
 
     // Send the pseudo of the client to the server
-    qDebug() << "Sending client information...";
     qDebug() << "player : " << _player.name;
-    char action[256] = "addClient:";
-    send_client_information(_socket_descriptor, strcat(action,_player.name));
+
+
+    frame f;
+    f.src = _local_addr.sin_addr;
+    f.dest = _local_addr.sin_addr;
+    strcpy(f.data_type,CONNECT);
+    strcpy(f.data, _player.name);
+
+    write_to_server(_socket_descriptor, &f);
+    qDebug() << "information sent...";
 
     // When the client is connected, display the mainPage
     ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
@@ -81,8 +94,8 @@ void MainWindow::serverDisconnection()
     // cleaning the connection page
     ui->connectionWidget->clean();
 
-    char action[256] = "removeClient:";
-    send_client_information(_socket_descriptor, strcat(action,_player.name));
+//    char action[256] = "removeClient:";
+//    send_client_information(_socket_descriptor, strcat(action,_player.name));
     server_disconnection(_socket_descriptor);
 
     qDebug() << "Client is disconnected";

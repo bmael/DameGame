@@ -5,7 +5,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#include "../DameGame/client.h"
+#include "../DameGame/include/client.h"
 }
 #endif
 

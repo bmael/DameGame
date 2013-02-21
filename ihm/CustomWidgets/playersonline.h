@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QStringListModel>
 
-#include "../DameGame/structures.h"
+#include "../DameGame/include/structures.h"
 
 namespace Ui {
 class PlayersOnline;

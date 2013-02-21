@@ -18,7 +18,8 @@ void IncomingConnectionThread::run()
     //Listen for incoming connections
     //TODO
     for(;;){
-        qDebug() << "[IncomingConnectionThread]" <<
-                QString::fromStdString(read_server_information(_socket_descriptor)).toUtf8();
+        char * res = read_server_information(_socket_descriptor);
+        if(res!= "") qDebug() << "[IncomingConnectionThread]" << res;
+        res = "";
     }
 }

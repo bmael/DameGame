@@ -5,7 +5,7 @@
 # define WHITE_DRAUGHT -2
 
 
-#include "structures.h"
+#include "include/structures.h"
 
 /**
  * Prints a line of the gameboard
