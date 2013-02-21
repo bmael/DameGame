@@ -68,8 +68,8 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     qDebug() << "Client is connected";
 
     // We start a thread to listen for all incoming connections
-//     _incomingConnection =
-//            new IncomingConnectionThread(_socket_descriptor);
+     _incomingConnection =
+            new IncomingConnectionThread(_socket_descriptor);
 
     // Send the pseudo of the client to the server
     qDebug() << "player : " << _player.name;
