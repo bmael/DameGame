@@ -51,22 +51,20 @@ void server_connection(int socket_descriptor, sockaddr_in local_addr);
 void server_disconnection(int socket_descriptor);
 
 /**
- * @brief Send some information from the client to the server.
- * @param socket_descriptor
- * @param pbuf
- */
-//void send_client_information(int socket_descriptor, sockaddr_in addr, char *host, char* pbuf, char *cmd);
-
-/**
- * @brief Writes a frame to another device.
- * @param socket_descriptor
- * @param frame
- * @param len
+ * @brief Make a frame
+ * @param src the source address
+ * @param dest the destination address
+ * @param datatype the type of the frame
+ * @param data the data to send with the frame
  * @return
  */
-int write_frame(int socket_descriptor, frame *frame, int len);
+frame make_frame(in_addr src, in_addr dest, char * datatype, char * data);
 
-
+/**
+ * @brief Send a frame to the server
+ * @param socket_descriptor used
+ * @param f the frame to send
+ */
 void write_to_server(int socket_descriptor, frame *f);
 
 /**
@@ -74,6 +72,6 @@ void write_to_server(int socket_descriptor, frame *f);
  * @param socket_descriptor
  * @param pbuf
  */
-char* read_server_information(int socket_descriptor);
+frame read_server_information(int socket_descriptor);
 
 #endif

@@ -13,14 +13,17 @@ extern "C" {
 class IncomingConnectionThread : public QThread
 {
 public:
-    IncomingConnectionThread(int socket_descriptor, QObject* parent = NULL);
+    IncomingConnectionThread(int socket_descriptor, QObject* parent = 0);
     virtual ~IncomingConnectionThread();
+
+    void setStop(bool s);
 
 protected:
     virtual void run();
 
 private:
     int _socket_descriptor;
+    bool stop;
 };
 
 #endif // INCOMINGCONNECTIONTHREAD_H

@@ -38,17 +38,14 @@ void server_disconnection(int socket_descriptor){
     close(socket_descriptor);
 }
 
+frame make_frame(in_addr src, in_addr dest, char * datatype, char * data){
+    frame f;
+    f.src = src;
+    f.dest = dest;
+    strcpy(f.data_type, datatype);
+    strcpy(f.data, data);
 
-
-int write_frame(int socket_descriptor, frame *frame, int len)
-{
-    int nb;
-//    struct sockaddr to; /* address to send to */
-//    int to_len = sizeof(to); /* length of the address */
-
-//    strcpy(to.sa_data, frame->dest);
-//    nb = sendto(socket_descriptor, frame, len, 0, &to, to_len);
-    return nb;
+    return f;
 }
 
 void write_to_server(int socket_descriptor, frame * f){
@@ -59,15 +56,16 @@ void write_to_server(int socket_descriptor, frame * f){
 }
 
 
-char* read_server_information(int socket_descriptor){
-    char buffer[256];
-    char * res = "";
+frame read_server_information(int socket_descriptor){
+    char buffer[sizeof(frame)];
     int length;
-    if((length = read(socket_descriptor, buffer, sizeof(buffer))) > 0){
+    if((length = read(socket_descriptor, buffer, sizeof(frame))) > 0){
         printf("answer of the server : \n");
-        memcpy(res,buffer, strlen(buffer));
-        //write(1, strcat(buffer, "plop"), length);
-
+        write(1, buffer, length);
     }
-    return res;
+
+    frame f;
+    f = *(frame *)buffer;
+
+    return f;
 }

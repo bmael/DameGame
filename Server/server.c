@@ -20,7 +20,7 @@ Serveur à lancer avant le client
 #include "server.h"
 
 #define TAILLE_MAX_NOM 256
-#define PORT 5005
+#define PORT 5000
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
@@ -101,12 +101,43 @@ void * client_manager_cmd(void * sock){
 	cpt_players++;
 	
 	/* Advising all client that there is an incoming connection */
+	alert_all_client(CONNECT);
 	pthread_mutex_unlock(&players_mutex);
 	
-    }
+    } // END CONNECTION
+    
+    /* action : DISCONNECTION */
+    if(strcmp(f.data_type, DISCONNECT) == 0){
+      
+	pthread_mutex_lock(&players_mutex);
+	printf("removing a client.....\n");
+            	
+	//search the players on the list
+	int i = 0;
+	int find = 0;
+	while((!find) && (i < cpt_players)){	  
+	  if(strcmp(players[i].name, f.data) == 0){find=1;}
+	  else{i++;}
+	}
+	
+	if(find){
+	  //delete the player from the list
+	  int j;
+	  for(j = i; j < cpt_players-1; j++){
+	    players[j] = players[j+1];
+	   sockets[j] = sockets[j+1];
+	  }
 
+	  cpt_players--;
+	  
+	}
+	
+	pthread_mutex_unlock(&players_mutex);
+	
+    }// END DISCONNECTION
 
     
+    display_online_players();
     
   }
 
@@ -114,6 +145,34 @@ void * client_manager_cmd(void * sock){
 
   
   
+}
+
+void alert_all_client(char * command){
+  
+  printf("Command to execute : %s\n", command);
+  
+  int client_socket_descriptor;
+  int i;
+  for(i = 0; i<cpt_players; i++){
+    client_socket_descriptor = sockets[i];
+    
+    if(strcmp(command, CONNECT) == 0){
+      printf("---> advising the client[%d]\n", i);
+      printf("---> with socket : %d", client_socket_descriptor);
+      
+      frame f;
+      strcpy(f.data_type,INCOMING_CONNECTION) ;
+      strcpy(f.data , players[cpt_players-1].name);
+      
+      if((write(client_socket_descriptor, (char*)&f, sizeof(frame)) < 0)){
+	  perror("[Server_incomingConnection] : Can't write the message to send to the client");
+	  exit(1);
+      }
+      printf("Incoming connection : advising client : %d\n", client_socket_descriptor);
+    }
+  }
+
+
 }
 
 
@@ -175,7 +234,13 @@ int main(int argc, char **argv) {
   /*------------------------------------------------------------*/
   /* SOLUTION 2 : Utiliser un nouveau numéro de port            */
   /*------------------------------------------------------------*/
-  adresse_locale.sin_port = htons(PORT);
+  int port = PORT;
+  
+  if(argc > 1){
+    port = atoi(argv[1]);
+  }
+  
+  adresse_locale.sin_port = htons(port);
   
   /*------------------------------------------------------------*/
   
