@@ -10,12 +10,19 @@
 
 #include "command.h"
 #include "frame.h"
+#include "structures.h"
 
 
 typedef struct sockaddr 	sockaddr;
 typedef struct sockaddr_in 	sockaddr_in;
 typedef struct hostent 		hostent;
 typedef struct servent 		servent;
+
+typedef struct {
+    int socket_desc;
+    player * players;
+
+} for_listen_server;
 
 
 /**
@@ -50,15 +57,7 @@ void server_connection(int socket_descriptor, sockaddr_in local_addr);
  */
 void server_disconnection(int socket_descriptor);
 
-/**
- * @brief Make a frame
- * @param src the source address
- * @param dest the destination address
- * @param datatype the type of the frame
- * @param data the data to send with the frame
- * @return
- */
-frame make_frame(in_addr src, in_addr dest, char * datatype, char * data);
+
 
 /**
  * @brief Send a frame to the server
@@ -73,5 +72,11 @@ void write_to_server(int socket_descriptor, frame *f);
  * @param pbuf
  */
 frame read_server_information(int socket_descriptor);
+
+/**
+ * @brief Listen to interprete the server instruction
+ * @param sock the socket to listen
+ */
+void * listen_server_instruction(void *s);
 
 #endif

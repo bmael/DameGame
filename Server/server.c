@@ -57,14 +57,13 @@ void * client_manager_cmd(void * sock){
       
         connection(&f,
                  players,
-                 sockets,
                  new_socket_descriptor,
                  &cpt_players,
                  cpt_max_client);
 		
         pthread_mutex_unlock(&players_mutex);
 
-        display_online_players(cpt_players, players, sockets);
+        display_online_players(cpt_players, players);
 
 	
     } // END CONNECTION
@@ -74,10 +73,10 @@ void * client_manager_cmd(void * sock){
       
 	pthread_mutex_lock(&players_mutex);
 
-    disconnection(&f, players, sockets, &cpt_players);
+    disconnection(&f, players, &cpt_players);
 	
 	pthread_mutex_unlock(&players_mutex);
-    display_online_players(cpt_players, players, sockets);
+    display_online_players(cpt_players, players);
 
 	
     }// END DISCONNECTION
@@ -121,12 +120,12 @@ int main(int argc, char **argv) {
   char machine[TAILLE_MAX_NOM];	/* Nom de la machine locale */
   
   gethostname(machine, TAILLE_MAX_NOM);	/* Récupération du nom de la machine */
-    printf("Server name : %s\n",machine);
   pthread_t nouveau_client;	/* Thread for each client */
+
+  printf("Server name : %s\n",machine);
 
   /* Allocation of memory for players */
   players = calloc(cpt_max_client, sizeof(player));
-  sockets = calloc(cpt_max_client, sizeof(int));
 	
   /* Récupération de la structure d'adresse en récupérant le nom */
   if ( (ptr_hote = gethostbyname(machine)) == NULL ) {

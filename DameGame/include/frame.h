@@ -36,6 +36,16 @@ typedef struct {
     char data[DATA_SIZE];
 } frame;
 
+/**
+ * @brief Make a frame
+ * @param src the source address
+ * @param dest the destination address
+ * @param datatype the type of the frame
+ * @param data the data to send with the frame
+ * @return
+ */
+frame make_frame(in_addr src, in_addr dest, char * datatype, char * data);
+
 
 
 

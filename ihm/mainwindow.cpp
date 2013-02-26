@@ -70,6 +70,17 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, CONNECT, _player.name);
     write_to_server(_socket_descriptor, &f);
 
+    /* Listen for all instruction from the server */
+
+    for_listen_server for_server;
+    for_server.socket_desc = _socket_descriptor;
+    for_server.players = _onlinePlayers;
+
+    if(pthread_create(&_server_thread, NULL, listen_server_instruction, &for_server)){
+        perror("[thread] : error");
+        return;
+    }
+
     // When the client is connected, display the mainPage
     ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
 

@@ -30,8 +30,6 @@ player *players;		/* Array of connected players */
 int cpt_players = 0;		/* Number of connected players */
 pthread_mutex_t players_mutex;
 
-int *sockets;
-
 /******************************************************************************/
 
 

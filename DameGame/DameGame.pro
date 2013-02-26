@@ -6,6 +6,8 @@ CONFIG -= qt
 INCLUDEPATH += . ..
 WARNINGS += -Wall
 
+LIBS += lpthread
+
 HEADERS += include/structures.h \
             include/command.h \
             include/frame.h \

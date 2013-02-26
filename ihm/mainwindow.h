@@ -8,13 +8,14 @@
 #ifdef __cplusplus
 extern "C" {
 #include "../DameGame/include/client.h"
-#include "../DameGame/include/structures.h"
 }
 #endif
 
 namespace Ui {
 class MainWindow;
 }
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -42,6 +43,8 @@ private:
     servent *_ptr_service;      // information about a service
 
     player _player;// the player
+    player * _onlinePlayers; // List of online players
+    pthread_t _server_thread;	// Thread for server
 
     //Thread for listen incoming connection
     IncomingConnectionThread * _incomingConnection;

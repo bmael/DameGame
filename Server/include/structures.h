@@ -17,6 +17,7 @@ typedef struct {
 
 typedef struct {
     char * name;    // Player's name
+    int socket;     // Player's socket
     int color;      // Color of his checkers
 } player;
 

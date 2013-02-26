@@ -38,19 +38,11 @@ void server_disconnection(int socket_descriptor){
     close(socket_descriptor);
 }
 
-frame make_frame(in_addr src, in_addr dest, char * datatype, char * data){
-    frame f;
-    f.src = src;
-    f.dest = dest;
-    strcpy(f.data_type, datatype);
-    strcpy(f.data, data);
 
-    return f;
-}
 
 void write_to_server(int socket_descriptor, frame * f){
     if((write(socket_descriptor, (char*) f, sizeof(frame))) < 0){
-        perror("erreur : impossible d'écrire le message destiné au serveur.");
+        perror("[write_to_server] : can't send the message to the server.");
         exit(1);
     }
 }
@@ -69,3 +61,67 @@ frame read_server_information(int socket_descriptor){
 
     return f;
 }
+
+void * listen_server_instruction(void *s){
+      int length;
+
+      printf("[listen_server_instruction]\n");
+
+      /* cast */
+      for_listen_server *for_server = (for_listen_server *) s;
+      int new_socket_descriptor = for_server->socket_desc;
+      player * players = for_server->players;
+
+      int nbCLient;
+
+      for(;;){
+        char buffer[sizeof(frame)];
+        if ( (length = read(new_socket_descriptor, buffer, sizeof(frame))) <= 0 ) {
+          write(1, buffer, length);
+          return;
+        }
+
+        frame f;
+        f = *(frame *)buffer;
+
+
+        /* action : INCOMING_CONNECTION */
+        if(strcmp(f.data_type, INCOMING_CONNECTION) == 0){
+            nbCLient = atoi(f.data);
+            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
+            write_to_server(new_socket_descriptor, &f2);
+            printf("Command : %s, Value : %d", GET_NB_CLIENT, nbCLient);
+        }
+
+        /* action : GET_NB_CLIENT */
+        if(strcmp(f.data_type, GET_NB_CLIENT) == 0){
+            nbCLient = atoi(f.data);
+            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
+            write_to_server(new_socket_descriptor, &f2);
+            printf("Command : %s, Value : %d", GET_NB_CLIENT, nbCLient);
+        }
+
+        /* action : GET_CLIENT_LIST */
+        if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
+            players = (player *) f.data;
+            display_online_players(players, nbCLient);
+        }
+
+
+      }
+}
+
+void display_online_players(player * players, int size){
+
+  printf("Players Online\n");
+  printf("---------------\n");
+
+  int i;
+  for(i=0; i<size; i++){
+   printf("-- %s\n",players[i].name);
+  }
+
+
+}
+
+
