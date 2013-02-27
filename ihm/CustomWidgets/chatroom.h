@@ -15,6 +15,13 @@ public:
     explicit Chatroom(QWidget *parent = 0);
     ~Chatroom();
     
+private slots:
+    void on_sendPushButton_clicked();
+    void addText(QString msg);
+
+signals:
+    void sendMessage(QString);
+
 private:
     Ui::Chatroom *ui;
 };

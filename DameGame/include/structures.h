@@ -21,4 +21,8 @@ typedef struct {
     int color;      // Color of his checkers
 } player;
 
-
+typedef struct {
+    player me;
+    player * other_players;
+    int nbPlayers;
+} players_client_thread;

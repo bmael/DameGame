@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <QDebug>
 
-#include "Threads/incomingconnectionthread.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Configure disconnection of the user
     connect(ui->rightMenuWidget, SIGNAL(askDisconnection()), this, SLOT(serverDisconnection()));
+    connect(ui->rightMenuWidget, SIGNAL(askSendMessage(QString)), this, SLOT(sendChatMessage(QString)));
+
+    //Chatroom
+    connect(this, SIGNAL(askAddMsg(QString)), ui->rightMenuWidget, SIGNAL(addMsg(QString)));
 
 }
 
@@ -34,8 +38,6 @@ void MainWindow::on_actionQuit_triggered()
     //have to disconnect the player before close
     server_disconnection(_socket_descriptor);
 
-    //_incomingConnection->setStop(true);
-    //delete _incomingConnection;
     this->close();
 }
 
@@ -47,39 +49,42 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     _player.name = new char[200];
     strcpy(_player.name, pseudo.toStdString().c_str());
 
-    qDebug() << "initializing the host";
+    qDebug() << "[Server_connection] : initializing the host";
     init_host(_ptr_host, (char*)host.toStdString().c_str(), &_local_addr);
 
-    qDebug() << "Assigning a port to the client";
+    qDebug() << "[Server_connection] : Assigning a port to the client";
     assign_port(&_local_addr, port);
 
-    qDebug() << "Creating a socket";
+    qDebug() << "[Server_connection] : Creating a socket";
     _socket_descriptor = create_socket();
 
-    qDebug() << "Connecting the client to the server";
+    qDebug() << "[Server_connection] : Connecting the client to the server";
     server_connection(_socket_descriptor, _local_addr);
 
-    qDebug() << "Client is connected";
+    _player.socket = _socket_descriptor;
 
-    // We start a thread to listen for all incoming connections
-//     _incomingConnection =
-//            new IncomingConnectionThread(_socket_descriptor, this);
+    qDebug() << "[Server_connection] : Client is connected";
 
     // Send the pseudo of the client to the server
-    qDebug() << "Sending information to the server" << _player.name;
+    qDebug() << "[Server_connection] : Sending information to the server" << _player.name;
     frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, CONNECT, _player.name);
-    write_to_server(_socket_descriptor, &f);
+    write_to_server(_player.socket, &f);
 
     /* Listen for all instruction from the server */
+    _nbPlayerMax = 3;
+    _players.me = _player;
+    _players.other_players = (player*)calloc(_nbPlayerMax, sizeof(player));
+    _players.nbPlayers = 0;
 
-    for_listen_server for_server;
-    for_server.socket_desc = _socket_descriptor;
-    for_server.players = _onlinePlayers;
+    //qDebug() << "Other_players : " << _players.other_players[0].name;
 
-    if(pthread_create(&_server_thread, NULL, listen_server_instruction, &for_server)){
-        perror("[thread] : error");
-        return;
-    }
+//    if(pthread_create(&_server_thread, NULL, listen_server_instruction, &_players)){
+//        perror("[Server_connection] : Problem on the thread");
+//        return;
+//    }
+
+   _chatlist = new ChatListener(_player.socket, this);
+   connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
     // When the client is connected, display the mainPage
     ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
@@ -131,4 +136,22 @@ void MainWindow::on_showHidePushButton_clicked()
     }
 
     animation->start(QPropertyAnimation::DeleteWhenStopped);
+}
+
+void MainWindow::sendChatMessage(QString msg)
+{
+    qDebug() << msg;
+    char data[sizeof(DATA_SIZE)] = "\0";
+    strcat(data, "[");
+    strcat(data, _player.name);
+    strcat(data, "] : ");
+    strcat(data, msg.toStdString().c_str());
+    frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, SEND_MSG_CHAT, data);
+    write_to_server(_player.socket, &f);
+}
+
+void MainWindow::addMsg(QString msg)
+{
+    qDebug() << "ADDING MSG : " << msg;
+    askAddMsg(msg);
 }

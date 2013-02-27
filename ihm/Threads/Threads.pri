@@ -2,8 +2,9 @@ INCLUDEPATH += ./
 DEPENDPATH += $$PWD
  
 HEADERS += \
-SOURCES += \
-    $$PWD/incomingconnectionthread.h
+    $$PWD/incomingconnectionthread.h \
+     $$PWD/chatlistener.h
 
 SOURCES += \
-    $$PWD/incomingconnectionthread.cpp
+    $$PWD/incomingconnectionthread.cpp \
+     $$PWD/chatlistener.cpp

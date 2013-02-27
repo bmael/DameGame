@@ -18,12 +18,6 @@ typedef struct sockaddr_in 	sockaddr_in;
 typedef struct hostent 		hostent;
 typedef struct servent 		servent;
 
-typedef struct {
-    int socket_desc;
-    player * players;
-
-} for_listen_server;
-
 
 /**
  * @brief Initializes the host
@@ -78,5 +72,7 @@ frame read_server_information(int socket_descriptor);
  * @param sock the socket to listen
  */
 void * listen_server_instruction(void *s);
+
+void display_online_players(player * players, int size);
 
 #endif

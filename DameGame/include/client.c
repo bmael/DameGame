@@ -41,72 +41,89 @@ void server_disconnection(int socket_descriptor){
 
 
 void write_to_server(int socket_descriptor, frame * f){
-    if((write(socket_descriptor, (char*) f, sizeof(frame))) < 0){
+    if((write(socket_descriptor, f, sizeof(frame))) < 0){
         perror("[write_to_server] : can't send the message to the server.");
         exit(1);
     }
+    //memset(f, 0, sizeof(f));
 }
 
 
 frame read_server_information(int socket_descriptor){
-    char buffer[sizeof(frame)];
+    frame f;
     int length;
-    if((length = read(socket_descriptor, buffer, sizeof(frame))) > 0){
-        printf("answer of the server : \n");
-        write(1, buffer, length);
+    if((length = read(socket_descriptor, &f, sizeof(frame))) <= 0){
+        perror("[read_server_information] : Can't read the frame.");
+        exit(1);
     }
 
-    frame f;
-    f = *(frame *)buffer;
 
     return f;
 }
 
 void * listen_server_instruction(void *s){
-      int length;
+//      int length;
 
-      printf("[listen_server_instruction]\n");
-
-      /* cast */
-      for_listen_server *for_server = (for_listen_server *) s;
-      int new_socket_descriptor = for_server->socket_desc;
-      player * players = for_server->players;
-
-      int nbCLient;
+      /* cast */     
+      players_client_thread *tmp = (players_client_thread *) s;
+      players_client_thread _players = *tmp;
 
       for(;;){
-        char buffer[sizeof(frame)];
-        if ( (length = read(new_socket_descriptor, buffer, sizeof(frame))) <= 0 ) {
-          write(1, buffer, length);
-          return;
-        }
 
-        frame f;
-        f = *(frame *)buffer;
+//        while ( (length = read(_players.me.socket, &f, sizeof(frame))) > 0 ) {
+//            write(1, &f, length);
+//        }
 
+//        if ( (length = read(_players.me.socket, &f, sizeof(frame))) <= 0 ) {
+//            perror("[Listen_server_instruction] : can't read the frame.");
+//            exit(1);
+//        }
+          printf("Info player me : %s", _players.me.name);
+        frame f = read_server_information(_players.me.socket);
 
-        /* action : INCOMING_CONNECTION */
-        if(strcmp(f.data_type, INCOMING_CONNECTION) == 0){
-            nbCLient = atoi(f.data);
-            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
-            write_to_server(new_socket_descriptor, &f2);
-            printf("Command : %s, Value : %d", GET_NB_CLIENT, nbCLient);
-        }
+//        /* action : INCOMING_CONNECTION */
+//        if(strcmp(f.data_type, INCOMING_CONNECTION) == 0){
+//            nbCLient = atoi(f.data);
+//            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
+//            write_to_server(new_socket_descriptor, &f2);
+//            printf("Command : %s, Value : %d", GET_NB_CLIENT, nbPlayers);
+//        }
 
         /* action : GET_NB_CLIENT */
         if(strcmp(f.data_type, GET_NB_CLIENT) == 0){
-            nbCLient = atoi(f.data);
-            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
-            write_to_server(new_socket_descriptor, &f2);
-            printf("Command : %s, Value : %d", GET_NB_CLIENT, nbCLient);
+
+            _players.nbPlayers = atoi(f.data);
+
+            printf("[Listen_server_instruction] : GET_NB_CLIENT %d\n", _players.nbPlayers);
+
+//            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
+            frame f2;
+            memset(&f2, 0, sizeof(frame));
+            strcpy(f2.data_type, GET_CLIENT_LIST);
+            write_to_server(_players.me.socket, &f2);
+
+
         }
 
         /* action : GET_CLIENT_LIST */
         if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
-            players = (player *) f.data;
-            display_online_players(players, nbCLient);
+            printf("[Listen_server_instruction] : GET_CLIENT_LIST %s\n", f.data);
+            //memcpy(_players.other_players, f.data, _players.nbPlayers * sizeof(player));
+            player * tmpplayers = calloc(_players.nbPlayers, sizeof(player));
+            memcpy(tmpplayers, f.data, _players.nbPlayers * sizeof(player));
+
+           printf("other players : %s",(char*)_players.other_players);
+//            printf("[thread] : other players : %s", tmpplayers[0].name);
+//           printf("nbPOlayers : %d", _players.nbPlayers);
+           //printf("player : %s", _players.other_players[0].name);
+           //display_online_players(_players.other_players, _players.nbPlayers);
         }
 
+        /* action : GET_CLIENT_LIST */
+        if(strcmp(f.data_type, SEND_MSG_CHAT) == 0){
+            printf("[Listen_server_instruction] : SEND_MSG_CHAT %s\n", f.data);
+
+        }
 
       }
 }

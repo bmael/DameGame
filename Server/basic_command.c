@@ -16,23 +16,25 @@ void memory_reallocation( player *players,
 }
 
 void write_to_client(int socket_descriptor, frame *f){
-      if((write(socket_descriptor, (char*)&f, sizeof(frame))) < 0){
+    printf("[write_to_client] : sending : %s - %s to %d\n", f->data_type, f->data, socket_descriptor);
+      if((write(socket_descriptor, f, sizeof(frame))) < 0){
         perror("[write_to_client] : can't send the message to the client.");
         exit(1);
     }
+//    memset(f,0,sizeof(f));
 }
 
 // Displays the online players on the standard output.
 void display_online_players(int cpt_players, player * players){
 
-    printf("Displaying online players with their sockets....\n");
+    printf("[Display_online_players]\n");
 
-    printf("Name           | socket\n");
-    printf("---------------|---------------\n");
+    printf("\tName           | socket\n");
+    printf("\t---------------|---------------\n");
 
     int i;
     for(i=0; i<cpt_players; i++){
-     printf("%s",players[i].name);
+     printf("\t%s",players[i].name);
      printf("\t\t%d\n",players[i].socket);
     }
 
@@ -61,9 +63,11 @@ void connection(frame * f,
 
     *cpt_players += 1;
 
+    printf("[Connection] : players array updated\n");
+
     //send_nb_client(new_socket_descriptor);
 
-    alert_all_client(CONNECT, *cpt_players, players);
+    //alert_all_client(CONNECT, *cpt_players, players);
 
 }
 

@@ -17,6 +17,8 @@ public:
     
 signals:
     void askDisconnection();
+    void askSendMessage(QString);
+    void addMsg(QString);
 
 private slots:
     void on_pushButton_clicked();

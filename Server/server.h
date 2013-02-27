@@ -10,7 +10,7 @@
 
 #include <pthread.h>
 
-#include "basic_command.h"
+#include "dame_command.h"
 #include "include/command.h"
 
 #define TAILLE_MAX_NOM 256
@@ -40,9 +40,5 @@ pthread_mutex_t players_mutex;
 void * client_manager_cmd(void * sock);
 
 
-/**
- * @brief Send the online players list to a client
- * @param socket_descriptor the socket descriptor of the client 
- */
-void send_nb_client(int socket_descriptor);
+
 

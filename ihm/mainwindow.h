@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "Threads/incomingconnectionthread.h"
+#include "Threads/chatlistener.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +32,11 @@ private slots:
 
     void on_actionQuit_triggered();
     void on_showHidePushButton_clicked();
+    void sendChatMessage(QString msg);
+    void addMsg(QString msg);
+
+signals:
+    void askAddMsg(QString);
 
 private:
     Ui::MainWindow *ui;
@@ -42,12 +48,15 @@ private:
     hostent *_ptr_host; 		// information about host machine
     servent *_ptr_service;      // information about a service
 
-    player _player;// the player
+    players_client_thread _players;
+    int _nbPlayerMax;   // the number of online players
+    player _player; // the player
     player * _onlinePlayers; // List of online players
     pthread_t _server_thread;	// Thread for server
 
     //Thread for listen incoming connection
     IncomingConnectionThread * _incomingConnection;
+    ChatListener * _chatlist;
 
 };
 

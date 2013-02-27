@@ -23,7 +23,7 @@
 #define MAX_PACKET_SIZE 1500    /* Maximum size of a packet */
 #define ADDR_SIZE       6       /* Size of IP address */
 #define DATA_TYPE_SIZE  4       /* Size of data type descripion */
-#define DATA_SIZE       (MAX_PACKET_SIZE - 2*ADDR_SIZE- -DATA_TYPE_SIZE) /* Size of data */
+#define DATA_SIZE       (MAX_PACKET_SIZE - 2*ADDR_SIZE - DATA_TYPE_SIZE) /* Size of data */
 
 #define JAM_CHAR        ' '
 
@@ -44,7 +44,7 @@ typedef struct {
  * @param data the data to send with the frame
  * @return
  */
-frame make_frame(in_addr src, in_addr dest, char * datatype, char * data);
+frame make_frame(in_addr src, in_addr dest, const char * datatype, char * data);
 
 
 
