@@ -5,8 +5,8 @@ void memory_reallocation( player *players,
                           int *cpt_max_client){
 
     printf("[Memory reallocation] : value of max_client is %d\n",*cpt_max_client);
-
-    (*cpt_max_client) = (*cpt_max_client) - 1 * 2;
+    *cpt_max_client += 1;
+    *cpt_max_client *= 2;
     printf("[Memory reallocation] : new value of max_client is %d\n",*cpt_max_client);
 
     if(realloc(players, *cpt_max_client * sizeof(player)) == 0){
@@ -45,18 +45,18 @@ void connection(frame * f,
                 player *players,
                 int socket_descriptor,
                 int *cpt_players,
-                int cpt_max_client){
+                int *cpt_max_client){
 
     printf("[Connection] : adding client...\n");
 
     // Reallocation of memory if needed
-    if((*cpt_players) == cpt_max_client-1){
+    if((*cpt_players) == *cpt_max_client-1){
         printf("[Connection] : need memory reallocation...\n");
-        memory_reallocation(players, &cpt_max_client);
+        memory_reallocation(players, cpt_max_client);
     }
 
     player to_add;
-    to_add.name = f->data;
+    memcpy(to_add.name, f->data, 10);
     to_add.socket = socket_descriptor;
 
     players[*cpt_players] = to_add;

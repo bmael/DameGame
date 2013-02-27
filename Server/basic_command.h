@@ -41,7 +41,7 @@ void connection(frame * f,
                player *players,
                int socket_descriptor,
                int *cpt_players,
-               int cpt_max_client);
+               int *cpt_max_client);
 
 /**
  * @brief Process for command DISCONNECTION. Remove a player with its socket from an array stored by the server.

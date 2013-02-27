@@ -16,7 +16,7 @@ typedef struct {
 } checkerboard;
 
 typedef struct {
-    char * name;    // Player's name
+    char name[10];  // Player's name
     int socket;     // Player's socket
     int color;      // Color of his checkers
 } player;
