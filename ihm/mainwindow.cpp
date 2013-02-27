@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <QDebug>
 
-
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -59,35 +59,40 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     _socket_descriptor = create_socket();
 
     qDebug() << "[Server_connection] : Connecting the client to the server";
-    server_connection(_socket_descriptor, _local_addr);
+    if(server_connection(_socket_descriptor, _local_addr) >= 0){
 
-    _player.socket = _socket_descriptor;
+        _player.socket = _socket_descriptor;
 
-    qDebug() << "[Server_connection] : Client is connected";
+        qDebug() << "[Server_connection] : Client is connected";
 
-    // Send the pseudo of the client to the server
-    qDebug() << "[Server_connection] : Sending information to the server" << _player.name;
-    frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, CONNECT, _player.name);
-    write_to_server(_player.socket, &f);
+        // Send the pseudo of the client to the server
+        qDebug() << "[Server_connection] : Sending information to the server" << _player.name;
+        frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, CONNECT, _player.name);
+        write_to_server(_player.socket, &f);
 
-    /* Listen for all instruction from the server */
-    _nbPlayerMax = 3;
-    _players.me = _player;
-    _players.other_players = (player*)calloc(_nbPlayerMax, sizeof(player));
-    _players.nbPlayers = 0;
+        /* Listen for all instruction from the server */
+        _nbPlayerMax = 3;
+        _players.me = _player;
+        _players.other_players = (player*)calloc(_nbPlayerMax, sizeof(player));
+        _players.nbPlayers = 0;
 
-    //qDebug() << "Other_players : " << _players.other_players[0].name;
+        //qDebug() << "Other_players : " << _players.other_players[0].name;
 
-//    if(pthread_create(&_server_thread, NULL, listen_server_instruction, &_players)){
-//        perror("[Server_connection] : Problem on the thread");
-//        return;
-//    }
+    //    if(pthread_create(&_server_thread, NULL, listen_server_instruction, &_players)){
+    //        perror("[Server_connection] : Problem on the thread");
+    //        return;
+    //    }
 
-   _chatlist = new ChatListener(_player.socket, this);
-   connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
+       _chatlist = new ChatListener(_player.socket, this);
+       connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
-    // When the client is connected, display the mainPage
-    ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
+        // When the client is connected, display the mainPage
+        ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
+    }
+    else{
+        QMessageBox errorBox(QMessageBox::Question,tr("error"),tr("Can't established the connection with the server."),QMessageBox::Cancel);
+        errorBox.exec();
+    }
 
 }
 

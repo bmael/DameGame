@@ -43,7 +43,7 @@ int create_socket();
  * @param socket_descriptor
  * @param local_addr
  */
-void server_connection(int socket_descriptor, sockaddr_in local_addr);
+int server_connection(int socket_descriptor, sockaddr_in local_addr);
 
 /**
  * @brief Disconnects the client.

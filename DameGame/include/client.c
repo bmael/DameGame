@@ -27,11 +27,13 @@ int create_socket(){
 
 }
 
-void server_connection(int socket_descriptor, sockaddr_in local_addr){
-    if(connect(socket_descriptor, (sockaddr*)(&local_addr), sizeof(local_addr)) < 0){
+int server_connection(int socket_descriptor, sockaddr_in local_addr){
+    int res = -1;
+    if((res = connect(socket_descriptor, (sockaddr*)(&local_addr), sizeof(local_addr))) < 0){
         perror("[server_connection] : can't establish a connection with the server");
-        exit(1);
+        //exit(1);
     }   
+    return res;
 }
 
 void server_disconnection(int socket_descriptor){
