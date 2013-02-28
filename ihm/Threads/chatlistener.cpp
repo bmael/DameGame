@@ -15,8 +15,6 @@ void ChatListener::setStop(bool s)
 
 void ChatListener::run()
 {
-    //Listen for incoming connections
-    //TODO
     while(!stop){
 
         frame f;

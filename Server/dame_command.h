@@ -10,3 +10,8 @@ void send_players_list(int socket_descriptor, player * players, int cpt_players)
 
 void send_nb_players(int socket_descriptor, int cpt_players);
 
+void send_player(int socket_descriptor, player p);
+
+void send_all_players(int socket_descriptor, player * players, int cpt_players);
+
+

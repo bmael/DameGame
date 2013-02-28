@@ -50,7 +50,6 @@ void MainWindow::on_actionQuit_triggered()
  */
 void MainWindow::serverConnection(QString host, int port, QString pseudo)
 {
-    _player.name = new char[200];
     strcpy(_player.name, pseudo.toStdString().c_str());
 
     qDebug() << "[Server_connection] : initializing the host";
@@ -89,6 +88,9 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
        _chatlist = new ChatListener(_player.socket, this);
        connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
+       // Start the listener for the players list
+       //_playerlist = new PlayerListener(_player.socket, this);
+
         // When the client is connected, display the mainPage
         ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
     }
@@ -112,9 +114,9 @@ void MainWindow::serverDisconnection()
     server_disconnection(_socket_descriptor);
 
     _chatlist->setStop(true);
+    _playerlist->setStop(true);
 
     qDebug() << "Client is disconnected";
-    free(_player.name);
 
     // When the client is disconnected, display the connection page
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);

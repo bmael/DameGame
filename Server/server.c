@@ -38,11 +38,11 @@ void * client_manager_cmd(void * sock){
                  &cpt_players,
                  &cpt_max_client);
 		
-        send_nb_players(new_socket_descriptor, cpt_players);
-
+        //send_nb_players(new_socket_descriptor, cpt_players);
+        send_all_players(new_socket_descriptor, players, cpt_players);
 
         display_online_players(cpt_players, players);
-        memset(&f, 0, sizeof(f));
+//        memset(&f, 0, sizeof(f));
 	
     } // END CONNECTION
     
@@ -51,7 +51,7 @@ void * client_manager_cmd(void * sock){
       
         disconnection(&f, players, &cpt_players);
         display_online_players(cpt_players, players);
-        memset(&f, 0, sizeof(f));
+//        memset(&f, 0, sizeof(f));
 
 	
     }// END DISCONNECTION
@@ -60,14 +60,14 @@ void * client_manager_cmd(void * sock){
     if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
 
         send_players_list(new_socket_descriptor, players, cpt_players);
-        memset(&f, 0, sizeof(f));
+//        memset(&f, 0, sizeof(f));
 
     }
     /* action : SEND_MSG_CHAT */
     if(strcmp(f.data_type, SEND_MSG_CHAT) == 0){
 
         send_msg_chat(f, players, cpt_players);
-        memset(&f, 0, sizeof(f));
+//        memset(&f, 0, sizeof(f));
 
     }
 
@@ -107,7 +107,8 @@ int main(int argc, char **argv) {
   printf("Server name : %s\n",machine);
 
   /* Allocation of memory for players */
-  players = calloc(cpt_max_client, sizeof(player));
+  printf("Size of player : %lu", sizeof(player));
+  players = malloc(cpt_max_client * sizeof(player));
 	
   /* Récupération de la structure d'adresse en récupérant le nom */
   if ( (ptr_hote = gethostbyname(machine)) == NULL ) {
@@ -166,5 +167,6 @@ int main(int argc, char **argv) {
   }
   
     close(socket_descriptor);
+    free(players);
 
 }

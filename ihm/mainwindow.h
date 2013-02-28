@@ -5,6 +5,7 @@
 
 #include "Threads/incomingconnectionthread.h"
 #include "Threads/chatlistener.h"
+#include "Threads/playerlistener.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,6 +58,7 @@ private:
     //Thread for listen incoming connection
     IncomingConnectionThread * _incomingConnection;
     ChatListener * _chatlist;
+    PlayerListener * _playerlist;
 
 };
 

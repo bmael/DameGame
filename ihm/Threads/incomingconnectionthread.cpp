@@ -20,8 +20,7 @@ void IncomingConnectionThread::setStop(bool s)
 
 void IncomingConnectionThread::run()
 {
-    //Listen for incoming connections
-    //TODO
+
     while(!stop){
         frame f ;
         read_server_information(_socket_descriptor, &f);

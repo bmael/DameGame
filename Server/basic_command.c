@@ -9,18 +9,23 @@ void memory_reallocation( player *players,
     *cpt_max_client *= 2;
     printf("[Memory reallocation] : new value of max_client is %d\n",*cpt_max_client);
 
-    if(realloc(players, *cpt_max_client * sizeof(player)) == 0){
+    player * ps;
+
+    if((ps = realloc(players, *cpt_max_client * sizeof(player))) == 0){
         perror("[Memory reallocation] : can't (re)allocate memory block for sockets...\n");
         exit(1);
     }
+
+    *players = *ps;
 }
 
 void write_to_client(int socket_descriptor, frame *f){
     printf("[write_to_client] : sending : %s - %s to %d\n", f->data_type, f->data, socket_descriptor);
+
       if((write(socket_descriptor, f, sizeof(frame))) < 0){
         perror("[write_to_client] : can't send the message to the client.");
         exit(1);
-    }
+      }
 //    memset(f,0,sizeof(f));
 }
 
@@ -50,18 +55,20 @@ void connection(frame * f,
     printf("[Connection] : adding client...\n");
 
     // Reallocation of memory if needed
-    if((*cpt_players) == *cpt_max_client-1){
+    if((*cpt_players) == *cpt_max_client){
         printf("[Connection] : need memory reallocation...\n");
         memory_reallocation(players, cpt_max_client);
     }
 
     player to_add;
-    memcpy(to_add.name, f->data, 10);
+    strcpy(to_add.name, f->data);
+    //memcpy(to_add.name, f->data, 10);
     to_add.socket = socket_descriptor;
 
     players[*cpt_players] = to_add;
 
     *cpt_players += 1;
+
 
     printf("[Connection] : players array updated\n");
 
