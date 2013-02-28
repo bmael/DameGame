@@ -28,37 +28,36 @@ public:
     ~MainWindow();
     
 private slots:
-    void serverConnection(QString host, int port, QString pseudo);
-    void serverDisconnection();
+    void serverConnection(QString host, int port, QString pseudo); //Connects the client to the server
+    void serverDisconnection();             // Disconnects the client from the server
 
-    void on_actionQuit_triggered();
-    void on_showHidePushButton_clicked();
-    void sendChatMessage(QString msg);
-    void addMsg(QString msg);
+    void on_actionQuit_triggered();         // Quits clearly the application
+    void on_showHidePushButton_clicked();   // Shows or hides the right menu
+    void sendChatMessage(QString msg);      // Sends a message on the chatroom
+    void addMsg(QString msg);               // Adds a message on the chatroom
 
 signals:
-    void askAddMsg(QString);
+    void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
 
 private:
+    void startListeners();      // Starts all listeners threads
+    void stopListeners();       // Stops all listeners threads
+
+private:
+    /* UI attributes */
     Ui::MainWindow *ui;
     bool _rightMenuHidden;
 
-    //Client attributes
-    int _socket_descriptor;     // descriptor of socket
+    /* Client attributes */
     sockaddr_in _local_addr;    // local adress of the client
     hostent *_ptr_host; 		// information about host machine
     servent *_ptr_service;      // information about a service
 
-    players_client_thread _players;
-    int _nbPlayerMax;   // the number of online players
-    player _player; // the player
-    player * _onlinePlayers; // List of online players
-    pthread_t _server_thread;	// Thread for server
+    player _player;             // the player
 
-    //Thread for listen incoming connection
-    IncomingConnectionThread * _incomingConnection;
-    ChatListener * _chatlist;
-    PlayerListener * _playerlist;
+    /* Threads */
+    ChatListener * _chatlist;       // Manages the chatroom
+    PlayerListener * _playerlist;   // Manages the online players list
 
 };
 
