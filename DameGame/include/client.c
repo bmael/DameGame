@@ -51,16 +51,16 @@ void write_to_server(int socket_descriptor, frame * f){
 }
 
 
-frame read_server_information(int socket_descriptor){
-    frame f;
+int read_server_information(int socket_descriptor, frame * f){
+
     int length;
-    if((length = read(socket_descriptor, &f, sizeof(frame))) <= 0){
+    if((length = read(socket_descriptor, f, sizeof(frame))) <= 0){
         perror("[read_server_information] : Can't read the frame.");
-        exit(1);
+        //exit(1);
     }
 
 
-    return f;
+    return length;
 }
 
 void * listen_server_instruction(void *s){
@@ -81,7 +81,8 @@ void * listen_server_instruction(void *s){
 //            exit(1);
 //        }
           printf("Info player me : %s", _players.me.name);
-        frame f = read_server_information(_players.me.socket);
+        frame f;
+        read_server_information(_players.me.socket, &f);
 
 //        /* action : INCOMING_CONNECTION */
 //        if(strcmp(f.data_type, INCOMING_CONNECTION) == 0){

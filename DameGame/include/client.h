@@ -65,7 +65,7 @@ void write_to_server(int socket_descriptor, frame *f);
  * @param socket_descriptor
  * @param pbuf
  */
-frame read_server_information(int socket_descriptor);
+int read_server_information(int socket_descriptor, frame *f);
 
 /**
  * @brief Listen to interprete the server instruction

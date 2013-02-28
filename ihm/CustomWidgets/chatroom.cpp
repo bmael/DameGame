@@ -2,6 +2,7 @@
 #include "ui_chatroom.h"
 
 #include <QDebug>
+#include <QScrollBar>
 
 Chatroom::Chatroom(QWidget *parent) :
     QWidget(parent),
@@ -27,4 +28,5 @@ void Chatroom::addText(QString msg)
 {
     qDebug() << "ADDING " << msg << "to ihm";
     ui->chatTextBrowser->setText(ui->chatTextBrowser->toPlainText()+ "\n" + msg);
+    ui->chatTextBrowser->verticalScrollBar()->setValue(ui->chatTextBrowser->verticalScrollBar()->maximum());
 }

@@ -19,7 +19,8 @@ void ChatListener::run()
     //TODO
     while(!stop){
 
-        frame f = read_server_information(_socket_descriptor);
+        frame f;
+        read_server_information(_socket_descriptor, &f);
         if(strcmp(f.data_type,SEND_MSG_CHAT) == 0){
             qDebug() << "[SEND_MSG_CHAT] : " << f.data;
             emit addMsg(QString::fromStdString(f.data));

@@ -3,8 +3,10 @@ DEPENDPATH += $$PWD
  
 HEADERS += \
     $$PWD/incomingconnectionthread.h \
-     $$PWD/chatlistener.h
+     $$PWD/chatlistener.h \
+    Threads/playerlistener.h
 
 SOURCES += \
     $$PWD/incomingconnectionthread.cpp \
-     $$PWD/chatlistener.cpp
+     $$PWD/chatlistener.cpp \
+    Threads/playerlistener.cpp

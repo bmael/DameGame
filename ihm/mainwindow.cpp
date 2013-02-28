@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
    // _incomingConnection = NULL;
+    _nbPlayerMax = 3;
+    _players.other_players = (player*)calloc(_nbPlayerMax, sizeof(player));
+    _players.nbPlayers = 0;
+
 
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
@@ -71,10 +75,8 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
         write_to_server(_player.socket, &f);
 
         /* Listen for all instruction from the server */
-        _nbPlayerMax = 3;
         _players.me = _player;
-        _players.other_players = (player*)calloc(_nbPlayerMax, sizeof(player));
-        _players.nbPlayers = 0;
+
 
         //qDebug() << "Other_players : " << _players.other_players[0].name;
 
@@ -83,6 +85,7 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
     //        return;
     //    }
 
+        // Start the listener for the chatroom
        _chatlist = new ChatListener(_player.socket, this);
        connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
@@ -90,7 +93,7 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
         ui->stackedWidget->slideInIdx(1, SlidingStackedWidget::BOTTOM2TOP);
     }
     else{
-        QMessageBox errorBox(QMessageBox::Question,tr("error"),tr("Can't established the connection with the server."),QMessageBox::Cancel);
+        QMessageBox errorBox(QMessageBox::Question,tr("error"),tr("Can't establish the connection with the server."),QMessageBox::Cancel);
         errorBox.exec();
     }
 
@@ -108,7 +111,7 @@ void MainWindow::serverDisconnection()
     //disconnection of the client
     server_disconnection(_socket_descriptor);
 
-    //_incomingConnection->setStop(true);
+    _chatlist->setStop(true);
 
     qDebug() << "Client is disconnected";
     free(_player.name);
