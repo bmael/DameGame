@@ -14,8 +14,12 @@ RightMenu::RightMenu(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /* Chatroom */
     connect(ui->chatroomWidget, SIGNAL(sendMessage(QString)), this, SIGNAL(askSendMessage(QString)));
     connect(this, SIGNAL(addMsg(QString)), ui->chatroomWidget, SLOT(addText(QString)));
+
+    /* Online players */
+    connect(this, SIGNAL(addPlayerToView(player)), ui->playersOnlineWidget, SLOT(addPlayer(player)));
 }
 
 /**

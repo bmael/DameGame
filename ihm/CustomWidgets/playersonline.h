@@ -2,9 +2,11 @@
 #define PLAYERSONLINE_H
 
 #include <QWidget>
-#include <QStringListModel>
+#include <QStandardItemModel>
+#include <QStandardItem>
 
-#include "../DameGame/include/structures.h"
+#include <DameGame/include/structures.h>
+
 
 namespace Ui {
 class PlayersOnline;
@@ -19,13 +21,12 @@ public:
     ~PlayersOnline();
 
 public slots:
-    void addPlayer(player * toAdd);
+    void addPlayer(player toAdd);
     
 private:
     Ui::PlayersOnline *ui;
 
-    QStringListModel _model;
-    QStringList _players;
+    QStandardItemModel * _model;
 
 };
 

@@ -2,6 +2,7 @@
 #define CHATLISTENER_H
 
 #include <QThread>
+#include <QMutex>
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,7 +14,7 @@ class ChatListener : public QThread
 {
     Q_OBJECT
 public:
-    explicit ChatListener(int socket_descriptor, QObject *parent = 0);
+    explicit ChatListener(int socket_descriptor, QMutex * mutex, QObject *parent = 0);
     
     void setStop(bool s);
 
@@ -28,6 +29,7 @@ protected:
 private:
     int _socket_descriptor;
     bool stop;
+    QMutex * mutex;
     
 };
 

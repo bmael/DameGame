@@ -7,7 +7,8 @@
  *
  *  Defines some structures very useful for our game
  ******************************************************************************/
-
+#ifndef STRUCTURE_H
+#define STRUCTURE_H
 
 typedef struct {
     int gameboard[10][10];  // State of the gameboard
@@ -16,13 +17,9 @@ typedef struct {
 } checkerboard;
 
 typedef struct {
-    char * name;    // Player's name
+    char name[10];    // Player's name
     int socket;     // Player's socket
     int color;      // Color of his checkers
 } player;
 
-typedef struct {
-    player me;
-    player * other_players;
-    int nbPlayers;
-} players_client_thread;
+#endif // STRUCTURE_H

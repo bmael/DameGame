@@ -1,7 +1,9 @@
-#ifndef LEFTMENU_H
-#define LEFTMENU_H
+#ifndef RIGHTMENU_H
+#define RIGHTMENU_H
 
 #include <QWidget>
+
+#include <DameGame/include/structures.h>
 
 namespace Ui {
 class RightMenu;
@@ -17,8 +19,11 @@ public:
     
 signals:
     void askDisconnection();
+
     void askSendMessage(QString);
     void addMsg(QString);
+
+    void addPlayerToView(player);
 
 private slots:
     void on_pushButton_clicked();
@@ -28,4 +33,4 @@ private:
 
 };
 
-#endif // LEFTMENU_H
+#endif // RIGHTMENU_H

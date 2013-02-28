@@ -67,10 +67,10 @@ void * listen_server_instruction(void *s){
 //      int length;
 
       /* cast */     
-      players_client_thread *tmp = (players_client_thread *) s;
-      players_client_thread _players = *tmp;
+//      players_client_thread *tmp = (players_client_thread *) s;
+//      players_client_thread _players = *tmp;
 
-      for(;;){
+//      for(;;){
 
 //        while ( (length = read(_players.me.socket, &f, sizeof(frame))) > 0 ) {
 //            write(1, &f, length);
@@ -80,9 +80,9 @@ void * listen_server_instruction(void *s){
 //            perror("[Listen_server_instruction] : can't read the frame.");
 //            exit(1);
 //        }
-          printf("Info player me : %s", _players.me.name);
-        frame f;
-        read_server_information(_players.me.socket, &f);
+//          printf("Info player me : %s", _players.me.name);
+//        frame f;
+//        read_server_information(_players.me.socket, &f);
 
 //        /* action : INCOMING_CONNECTION */
 //        if(strcmp(f.data_type, INCOMING_CONNECTION) == 0){
@@ -93,42 +93,42 @@ void * listen_server_instruction(void *s){
 //        }
 
         /* action : GET_NB_CLIENT */
-        if(strcmp(f.data_type, GET_NB_CLIENT) == 0){
+//        if(strcmp(f.data_type, GET_NB_CLIENT) == 0){
 
-            _players.nbPlayers = atoi(f.data);
+//            _players.nbPlayers = atoi(f.data);
 
-            printf("[Listen_server_instruction] : GET_NB_CLIENT %d\n", _players.nbPlayers);
+//            printf("[Listen_server_instruction] : GET_NB_CLIENT %d\n", _players.nbPlayers);
 
-//            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
-            frame f2;
-            memset(&f2, 0, sizeof(frame));
-            strcpy(f2.data_type, GET_CLIENT_LIST);
-            write_to_server(_players.me.socket, &f2);
+////            frame f2 = make_frame(f.dest,f.src,GET_CLIENT_LIST,"");
+//            frame f2;
+//            memset(&f2, 0, sizeof(frame));
+//            strcpy(f2.data_type, GET_CLIENT_LIST);
+//            write_to_server(_players.me.socket, &f2);
 
 
-        }
+//        }
 
-        /* action : GET_CLIENT_LIST */
-        if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
-            printf("[Listen_server_instruction] : GET_CLIENT_LIST %s\n", f.data);
-            //memcpy(_players.other_players, f.data, _players.nbPlayers * sizeof(player));
-            player * tmpplayers = calloc(_players.nbPlayers, sizeof(player));
-            memcpy(tmpplayers, f.data, _players.nbPlayers * sizeof(player));
+//        /* action : GET_CLIENT_LIST */
+//        if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
+//            printf("[Listen_server_instruction] : GET_CLIENT_LIST %s\n", f.data);
+//            //memcpy(_players.other_players, f.data, _players.nbPlayers * sizeof(player));
+//            player * tmpplayers = calloc(_players.nbPlayers, sizeof(player));
+//            memcpy(tmpplayers, f.data, _players.nbPlayers * sizeof(player));
 
-           printf("other players : %s",(char*)_players.other_players);
-//            printf("[thread] : other players : %s", tmpplayers[0].name);
-//           printf("nbPOlayers : %d", _players.nbPlayers);
-           //printf("player : %s", _players.other_players[0].name);
-           //display_online_players(_players.other_players, _players.nbPlayers);
-        }
+//           printf("other players : %s",(char*)_players.other_players);
+////            printf("[thread] : other players : %s", tmpplayers[0].name);
+////           printf("nbPOlayers : %d", _players.nbPlayers);
+//           //printf("player : %s", _players.other_players[0].name);
+//           //display_online_players(_players.other_players, _players.nbPlayers);
+//        }
 
-        /* action : GET_CLIENT_LIST */
-        if(strcmp(f.data_type, SEND_MSG_CHAT) == 0){
-            printf("[Listen_server_instruction] : SEND_MSG_CHAT %s\n", f.data);
+//        /* action : GET_CLIENT_LIST */
+//        if(strcmp(f.data_type, SEND_MSG_CHAT) == 0){
+//            printf("[Listen_server_instruction] : SEND_MSG_CHAT %s\n", f.data);
 
-        }
+//        }
 
-      }
+//      }
 }
 
 void display_online_players(player * players, int size){

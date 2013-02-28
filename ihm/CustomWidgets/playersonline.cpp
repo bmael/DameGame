@@ -7,9 +7,9 @@ PlayersOnline::PlayersOnline(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    _model = new QStandardItemModel(this);
 
-    ui->listView->setModel(&_model);
-
+    ui->listView->setModel(_model);
 }
 
 PlayersOnline::~PlayersOnline()
@@ -17,7 +17,8 @@ PlayersOnline::~PlayersOnline()
     delete ui;
 }
 
-void PlayersOnline::addPlayer(player *toAdd)
+void PlayersOnline::addPlayer(player toAdd)
 {
-    _players.append(QString(toAdd->name));
+    QStandardItem * item = new QStandardItem(QString::fromStdString(toAdd.name));
+    _model->setItem(item->row()+1, item);
 }

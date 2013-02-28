@@ -9,7 +9,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#include "../DameGame/include/client.h"
+#include <DameGame/include/client.h>
 }
 #endif
 
@@ -38,6 +38,7 @@ private slots:
 
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
+    void askAddPlayer(player);  // Emits when we have to add a new player in our list.
 
 private:
     void startListeners();      // Starts all listeners threads
@@ -58,6 +59,8 @@ private:
     /* Threads */
     ChatListener * _chatlist;       // Manages the chatroom
     PlayerListener * _playerlist;   // Manages the online players list
+
+    QMutex * mutex;
 
 };
 

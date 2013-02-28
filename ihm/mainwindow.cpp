@@ -17,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    /* Init Threads */
+    _chatlist = NULL;
+    _playerlist = NULL;
+
+    mutex = new QMutex();
+
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
             this, SLOT(serverConnection(QString, int, QString)));
@@ -28,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //Chatroom
     connect(this, SIGNAL(askAddMsg(QString)), ui->rightMenuWidget, SIGNAL(addMsg(QString)));
 
+    //Online players
+    connect(this, SIGNAL(askAddPlayer(player)), ui->rightMenuWidget, SIGNAL(addPlayerToView(player)));
+
 }
 
 /**
@@ -35,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 MainWindow::~MainWindow()
 {
+    if(_chatlist != NULL && _playerlist != NULL) stopListeners();
+    if(_chatlist != NULL) delete _chatlist;
+    if(_playerlist != NULL) delete _playerlist;
+
+    delete mutex;
     delete ui;
 }
 
@@ -175,11 +189,12 @@ void MainWindow::addMsg(QString msg)
 void MainWindow::startListeners()
 {
     // Start the listener for the chatroom
-   _chatlist = new ChatListener(_player.socket, this);
+   _chatlist = new ChatListener(_player.socket, mutex, this);
    connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
    // Start the listener for the players list
-   _playerlist = new PlayerListener(_player.socket, this);
+   _playerlist = new PlayerListener(_player.socket, mutex, this);
+   connect(_playerlist, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
 }
 
 /**

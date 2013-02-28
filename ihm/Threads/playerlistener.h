@@ -8,16 +8,18 @@ extern "C" {
 #endif
 
 #include <QThread>
+#include <QMutex>
 
 class PlayerListener : public QThread
 {
     Q_OBJECT
 public:
-    explicit PlayerListener(int socketDescriptor, QObject *parent = 0);
+    explicit PlayerListener(int socketDescriptor, QMutex *mutex, QObject *parent = 0);
 
     void setStop(bool s);
 
 signals:
+    void addPlayerToView(player p);
     
 public slots:
 
@@ -30,8 +32,8 @@ private:
 private:
     int _socket_descriptor;
     bool stop;
-    int _nbPlayers;
     QList<player> players;
+    QMutex * mutex;
 };
 
 #endif // PLAYERLISTENER_H
