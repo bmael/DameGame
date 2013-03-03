@@ -20,5 +20,5 @@ PlayersOnline::~PlayersOnline()
 void PlayersOnline::addPlayer(player toAdd)
 {
     QStandardItem * item = new QStandardItem(QString::fromStdString(toAdd.name));
-    _model->setItem(item->row()+1, item);
+    _model->appendRow(item);
 }
