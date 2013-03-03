@@ -6,6 +6,7 @@
 #include "Threads/incomingconnectionthread.h"
 #include "Threads/chatlistener.h"
 #include "Threads/playerlistener.h"
+#include "Threads/listener.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,6 +60,7 @@ private:
     /* Threads */
     ChatListener * _chatlist;       // Manages the chatroom
     PlayerListener * _playerlist;   // Manages the online players list
+    Listener * _listener;
 
     QMutex * mutex;
 

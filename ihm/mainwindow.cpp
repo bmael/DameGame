@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     /* Init Threads */
     _chatlist = NULL;
     _playerlist = NULL;
+    _listener = NULL;
 
     mutex = new QMutex();
 
@@ -47,6 +48,7 @@ MainWindow::~MainWindow()
     if(_chatlist != NULL && _playerlist != NULL) stopListeners();
     if(_chatlist != NULL) delete _chatlist;
     if(_playerlist != NULL) delete _playerlist;
+    if(_listener != NULL) delete _listener;
 
     delete mutex;
     delete ui;
@@ -189,12 +191,16 @@ void MainWindow::addMsg(QString msg)
 void MainWindow::startListeners()
 {
     // Start the listener for the chatroom
-   _chatlist = new ChatListener(_player.socket, mutex, this);
-   connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
+   //_chatlist = new ChatListener(_player.socket, mutex, this);
+   //connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
    // Start the listener for the players list
 //   _playerlist = new PlayerListener(_player.socket, mutex, this);
 //   connect(_playerlist, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
+
+    _listener = new Listener(_player.socket, this);
+    connect(_listener, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
+    connect(_listener, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
 }
 
 /**
