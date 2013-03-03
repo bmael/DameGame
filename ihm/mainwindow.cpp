@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Online players
     connect(this, SIGNAL(askAddPlayer(player)), ui->rightMenuWidget, SIGNAL(addPlayerToView(player)));
+    connect(this, SIGNAL(askRmPlayer(player)), ui->rightMenuWidget, SIGNAL(rmPlayerFromView(player)));
 
 }
 
@@ -106,6 +107,8 @@ void MainWindow::serverDisconnection()
 {
     // cleaning the connection page
     ui->connectionWidget->clean();
+
+    ui->rightMenuWidget->clear();
 
     //Advising the server for the disconnection
     frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
@@ -189,6 +192,7 @@ void MainWindow::startListeners()
     _listener = new Listener(_player.socket, this);
     connect(_listener, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
     connect(_listener, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
+    connect(_listener, SIGNAL(removePlayerFromView(player)), this, SIGNAL(askRmPlayer(player)));
 }
 
 /**

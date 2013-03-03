@@ -38,6 +38,7 @@ private slots:
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
     void askAddPlayer(player);  // Emits when we have to add a new player in our list.
+    void askRmPlayer(player);   // Emits when a client is disconnected.
 
 private:
     void startListeners();      // Starts all listeners threads

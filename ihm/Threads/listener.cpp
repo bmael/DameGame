@@ -12,6 +12,7 @@ Listener::Listener(int socket_descriptor, QObject *parent) :
 void Listener::setStop(bool s)
 {
     this->stop = s;
+    this->players.clear();
 }
 
 void Listener::run()
@@ -31,6 +32,12 @@ void Listener::run()
            addPlayer(ps);
        }
 
+        if(strcmp(f.data_type,REMOVE_CLIENT) == 0){
+           qDebug() << "[REMOVE_CLIENT] : " << f.data;
+           player ps = *((player *)f.data);
+           removePlayer(ps);
+       }
+
     }
 }
 
@@ -39,5 +46,23 @@ void Listener::addPlayer(player p)
     qDebug() << "[Player_listener] : add player : " << p.name;
     players.append(p);
     emit addPlayerToView(p);
+
+}
+
+void Listener::removePlayer(player p)
+{
+    qDebug() << "[Player_listener] : remove player : " << p.name;
+    bool isFind = false;
+    int i = 0;
+    while(!isFind && i < players.size()){
+        if( strcmp(players.at(i).name, p.name) == 0 ){
+            isFind = true;
+            break;
+        }
+        i++;
+    }
+
+    players.removeAt(i);
+    emit removePlayerFromView(p);
 
 }

@@ -59,4 +59,4 @@ void disconnection(frame *f, player *players, int *cpt_players);
  * @param players the array of players.
  * @param sockets the array of sockets.
  */
-void alert_all_client(char * command, int cpt_players, player *players);
+void alert_all_client(frame * f, int cpt_players, player *players);

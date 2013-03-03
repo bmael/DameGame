@@ -20,6 +20,7 @@ RightMenu::RightMenu(QWidget *parent) :
 
     /* Online players */
     connect(this, SIGNAL(addPlayerToView(player)), ui->playersOnlineWidget, SLOT(addPlayer(player)));
+    connect(this, SIGNAL(rmPlayerFromView(player)), ui->playersOnlineWidget, SLOT(removePlayer(player)));
 }
 
 /**
@@ -28,6 +29,12 @@ RightMenu::RightMenu(QWidget *parent) :
 RightMenu::~RightMenu()
 {
     delete ui;
+}
+
+void RightMenu::clear()
+{
+    ui->chatroomWidget->clear();
+    ui->playersOnlineWidget->clear();
 }
 
 
