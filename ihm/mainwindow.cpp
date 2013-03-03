@@ -193,8 +193,8 @@ void MainWindow::startListeners()
    connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
    // Start the listener for the players list
-   _playerlist = new PlayerListener(_player.socket, mutex, this);
-   connect(_playerlist, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
+//   _playerlist = new PlayerListener(_player.socket, mutex, this);
+//   connect(_playerlist, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
 }
 
 /**
@@ -205,5 +205,5 @@ void MainWindow::startListeners()
 void MainWindow::stopListeners()
 {
     _chatlist->setStop(true);
-    _playerlist->setStop(true);
+   //_playerlist->setStop(true);
 }

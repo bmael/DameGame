@@ -54,11 +54,16 @@ void write_to_server(int socket_descriptor, frame * f){
 int read_server_information(int socket_descriptor, frame * f){
 
     int length;
-    if((length = read(socket_descriptor, f, sizeof(frame))) <= 0){
+    char buffer[sizeof(frame)];
+
+    if((length = read(socket_descriptor, buffer, sizeof(frame))) <= 0){
         perror("[read_server_information] : Can't read the frame.");
         //exit(1);
     }
 
+    *f = *((frame*)&buffer);
+
+    memset(&buffer, 0, sizeof(buffer));
 
     return length;
 }

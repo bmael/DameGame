@@ -21,19 +21,19 @@ void PlayerListener::run()
 
     while(!stop){
 
-        mutex->lock();
+        //mutex->lock();
 
         frame f ;
         qDebug() << "[Player_listener]";
         read_server_information(_socket_descriptor, &f);
         if(strcmp(f.data_type,ADD_CLIENT) == 0){
            qDebug() << "[Player_listner] : " << f.data;
-           player ps = *(player *)f.data;
+           player ps = *((player *)f.data);
            addPlayer(ps);
        }
         memset(&f, 0, sizeof(f));
 
-        mutex->unlock();
+        //mutex->unlock();
 
 
     }
