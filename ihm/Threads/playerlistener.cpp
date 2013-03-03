@@ -21,7 +21,7 @@ void PlayerListener::run()
 
     while(!stop){
 
-        //mutex->lock();
+        mutex->lock();
 
         frame f ;
         qDebug() << "[Player_listener]";
@@ -33,7 +33,7 @@ void PlayerListener::run()
        }
         memset(&f, 0, sizeof(f));
 
-        //mutex->unlock();
+        mutex->unlock();
 
 
     }

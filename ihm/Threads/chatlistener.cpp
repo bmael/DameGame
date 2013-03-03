@@ -18,7 +18,7 @@ void ChatListener::run()
 {
     while(!stop){
 
-        //mutex->lock();
+        mutex->lock();
         frame f;
         qDebug() << "[Chat_listener]";
         read_server_information(_socket_descriptor, &f);
@@ -27,6 +27,6 @@ void ChatListener::run()
             emit addMsg(QString::fromStdString(f.data));
         }
         memset(&f, 0, sizeof(f));
-        //mutex->unlock();
+        mutex->unlock();
     }
 }
