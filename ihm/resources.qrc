@@ -6,5 +6,6 @@
         <file alias="2top">resources/icons/2Top.png</file>
         <file alias="about">resources/icons/about.png</file>
         <file alias="quit">resources/icons/quit.png</file>
+        <file alias="user">resources/icons/user.png</file>
     </qresource>
 </RCC>

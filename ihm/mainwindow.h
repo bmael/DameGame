@@ -4,8 +4,7 @@
 #include <QMainWindow>
 
 #include "Threads/incomingconnectionthread.h"
-#include "Threads/chatlistener.h"
-#include "Threads/playerlistener.h"
+#include "Threads/listener.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +38,7 @@ private slots:
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
     void askAddPlayer(player);  // Emits when we have to add a new player in our list.
+    void askRmPlayer(player);   // Emits when a client is disconnected.
 
 private:
     void startListeners();      // Starts all listeners threads
@@ -57,10 +57,7 @@ private:
     player _player;             // the player
 
     /* Threads */
-    ChatListener * _chatlist;       // Manages the chatroom
-    PlayerListener * _playerlist;   // Manages the online players list
-
-    QMutex * mutex;
+    Listener * _listener;
 
 };
 

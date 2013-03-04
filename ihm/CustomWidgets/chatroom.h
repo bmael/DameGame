@@ -14,6 +14,8 @@ class Chatroom : public QWidget
 public:
     explicit Chatroom(QWidget *parent = 0);
     ~Chatroom();
+
+    void clear();
     
 private slots:
     void on_sendPushButton_clicked();

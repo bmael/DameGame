@@ -91,6 +91,13 @@ void disconnection(frame *f, player * players, int *cpt_players){
     }
 
     if(find){
+
+      // Advising clients :
+      frame f2;
+      strcpy(f2.data_type,REMOVE_CLIENT) ;
+      strcpy(f2.data , f->data);
+      alert_all_client(&f2, *cpt_players, players);
+
       //delete the player from the list
       int j;
       for(j = i; j < (*cpt_players)-1; j++){
@@ -103,19 +110,14 @@ void disconnection(frame *f, player * players, int *cpt_players){
 }
 
 // Advise all the connected players of an event
-void alert_all_client(char * command, int cpt_players, player * players){
+void alert_all_client(frame * f, int cpt_players, player * players){
 
   int i;
   for(i = 0; i<cpt_players; i++){
 
-    if(strcmp(command, CONNECT) == 0){
 
-      frame f;
-      strcpy(f.data_type,INCOMING_CONNECTION) ;
-      strcpy(f.data , players[cpt_players-1].name);
-      write_to_client(players[cpt_players-1].socket, &f);
+      write_to_client(players[i].socket, f);
 
-    }
 
   }
 }

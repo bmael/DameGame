@@ -16,6 +16,12 @@ Chatroom::~Chatroom()
     delete ui;
 }
 
+void Chatroom::clear()
+{
+    ui->chatTextBrowser->clear();
+    ui->chatTextEdit->clear();
+}
+
 void Chatroom::on_sendPushButton_clicked()
 {
     if(!ui->chatTextEdit->toPlainText().isEmpty()){

@@ -16,6 +16,8 @@ class RightMenu : public QWidget
 public:
     explicit RightMenu(QWidget *parent = 0);
     ~RightMenu();
+
+    void clear();
     
 signals:
     void askDisconnection();
@@ -24,6 +26,7 @@ signals:
     void addMsg(QString);
 
     void addPlayerToView(player);
+    void rmPlayerFromView(player);
 
 private slots:
     void on_pushButton_clicked();

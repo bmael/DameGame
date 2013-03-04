@@ -18,10 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     /* Init Threads */
-    _chatlist = NULL;
-    _playerlist = NULL;
-
-    mutex = new QMutex();
+    _listener = NULL;
 
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
@@ -36,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Online players
     connect(this, SIGNAL(askAddPlayer(player)), ui->rightMenuWidget, SIGNAL(addPlayerToView(player)));
+    connect(this, SIGNAL(askRmPlayer(player)), ui->rightMenuWidget, SIGNAL(rmPlayerFromView(player)));
 
 }
 
@@ -44,11 +42,11 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 MainWindow::~MainWindow()
 {
-    if(_chatlist != NULL && _playerlist != NULL) stopListeners();
-    if(_chatlist != NULL) delete _chatlist;
-    if(_playerlist != NULL) delete _playerlist;
+    if(_listener != NULL){
+        stopListeners();
+        delete _listener;
+    }
 
-    delete mutex;
     delete ui;
 }
 
@@ -109,6 +107,8 @@ void MainWindow::serverDisconnection()
 {
     // cleaning the connection page
     ui->connectionWidget->clean();
+
+    ui->rightMenuWidget->clear();
 
     //Advising the server for the disconnection
     frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
@@ -188,13 +188,11 @@ void MainWindow::addMsg(QString msg)
  */
 void MainWindow::startListeners()
 {
-    // Start the listener for the chatroom
-   _chatlist = new ChatListener(_player.socket, mutex, this);
-   connect(_chatlist, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
-
-   // Start the listener for the players list
-//   _playerlist = new PlayerListener(_player.socket, mutex, this);
-//   connect(_playerlist, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
+    // Start a thread for listening server requests.
+    _listener = new Listener(_player.socket, this);
+    connect(_listener, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
+    connect(_listener, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
+    connect(_listener, SIGNAL(removePlayerFromView(player)), this, SIGNAL(askRmPlayer(player)));
 }
 
 /**
@@ -204,6 +202,5 @@ void MainWindow::startListeners()
  */
 void MainWindow::stopListeners()
 {
-    _chatlist->setStop(true);
-   //_playerlist->setStop(true);
+    _listener->setStop(true);
 }
