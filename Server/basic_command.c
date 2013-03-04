@@ -67,6 +67,12 @@ void connection(frame * f,
 
     players[*cpt_players] = to_add;
 
+    frame f2;
+    strcpy(f2.data_type, ADD_CLIENT);
+    memcpy(f2.data, &to_add, sizeof(to_add));
+
+    alert_all_client(&f2, *cpt_players, players);
+
     *cpt_players += 1;
 
 
@@ -74,7 +80,6 @@ void connection(frame * f,
 
     //send_nb_client(new_socket_descriptor);
 
-    //alert_all_client(CONNECT, *cpt_players, players);
 
 }
 

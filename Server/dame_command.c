@@ -9,8 +9,6 @@ void send_players_list(int socket_descriptor, player * players, int cpt_players)
     printf("[Send_players_list] : sending players list on socket : %d\n", socket_descriptor);
     printf("[Send_players_list] : data sent : %s\n", f.data);
 
-        //JUST WHY ??????????????
-
     write_to_client(socket_descriptor, &f);
 }
 
