@@ -80,3 +80,102 @@ void init_gameboard(checkerboard* game){
 
 }
 
+
+
+int test_movement(int player_color, movement m, checkerboard * game) {
+    // The selected checker is not a player's checker
+    if ( game->gameboard[m.startPoint.line][m.startPoint.column] != player_color ) {
+        printf("The selected checker is not one of the player's checkers\n");
+        return 0;
+    }
+
+    // Square is not empty
+    if ( game->gameboard[m.endPoint.line][m.endPoint.column] != EMPTY_CELL ) {
+        printf("You can't move your checker to a square that is not empty\n");
+        return 0;
+    }
+
+    // Wrong line
+    if( m.endPoint.line != m.startPoint.line + player_color ) {
+        printf("Wrong line\n");
+        return 0;
+    }
+
+    // Wrong column
+    if( (m.endPoint.column != (m.startPoint.column+1)) && (m.endPoint.column != (m.startPoint.column-1)) ) {
+        printf("Wrong column\n");
+        return 0;
+    }
+
+    // Otherwise, the movement is valid
+    return 1;
+}
+
+
+
+void move_checker(int player_color, movement m, int capture, checkerboard * game) {
+    game->gameboard[m.startPoint.line][m.startPoint.column] = EMPTY_CELL;
+    game->gameboard[m.endPoint.line][m.endPoint.column] = player_color;
+
+    if ( capture == 1 ) {
+        if ( player_color == WHITE_CHECKER ) {
+            game->nb_black--;
+            game->gameboard[(m.endPoint.line + m.startPoint.line)/2][(m.endPoint.column + m.startPoint.column)/2] = EMPTY_CELL;
+        }
+        else {
+            game->nb_white--;
+            game->gameboard[(m.endPoint.line + m.startPoint.line)/2][(m.endPoint.column + m.startPoint.column)/2] = EMPTY_CELL;
+        }
+    }
+}
+
+
+
+int start_game(checkerboard * game) {
+    movement m;
+    square start;
+    square end;
+
+    int player_color = WHITE_CHECKER;   // WHITE starts first
+
+    print_gameboard(game->gameboard);
+    printf("##### White starts #####\n");
+
+    while ( game_ended(game) == 0 ) {
+
+        printf("Enter the checker you want to move:");
+        scanf("%d %d", &(start.line), &(start.column));
+        m.startPoint = start;
+
+        printf("Enter the new position of this checker:");
+        scanf("%d %d", &(end.line), &(end.column));
+        m.endPoint = end;
+
+        move_checker(player_color, m, 0, game);
+        print_gameboard(game->gameboard);
+
+        // Changing turn
+        if ( player_color == WHITE_CHECKER ) {
+            player_color = BLACK_CHECKER;
+            printf("##### Black's turn #####\n");
+        }
+        else {
+            player_color = WHITE_CHECKER;
+            printf("##### White's turn #####\n");
+        }
+    }
+    return game_ended(game);
+}
+
+
+
+int game_ended(checkerboard * game) {
+    if ( game->nb_white == 0 ) {
+        return WHITE_CHECKER;
+    }
+    if ( game->nb_black == 0 ) {
+        return BLACK_CHECKER;
+    }
+
+    return 0;
+}
