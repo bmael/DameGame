@@ -22,4 +22,14 @@ typedef struct {
     int color;      // Color of his checkers
 } player;
 
+typedef struct {
+	unsigned int line;		// Square line
+	unsigned int column;	// Square column
+} square;
+
+typedef struct {
+	square startPoint;	// Start square of a movement
+	square endPoint;	// End square of a movement
+} movement;
+
 #endif // STRUCTURE_H
