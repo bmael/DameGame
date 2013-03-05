@@ -5,7 +5,7 @@
 # define WHITE_DRAUGHT -2
 
 
-#include "include/structures.h"
+#include "include/structures.h"	// structures for checkerboard, player, square and movement
 
 /**
  * Prints a line of the gameboard
@@ -33,10 +33,43 @@ void init_gameboard(checkerboard* game);
 int test_movement(int player_color, movement m, checkerboard * game);
 
 /**
+ * Test if a movement is valid, and execute it if it is
+ * 	Returns 1 if the movement is valid, 0 otherwise
+ *
+ */
+int test_and_execute_movement(int player_color, movement m, checkerboard * game);
+
+/**
+ * Test if a movement is valid, and execute it if it is
+ * 	Returns 1 if the movement is valid, 0 otherwise
+ *
+ */
+int test_and_execute_movement_checker(int player_color, movement m, checkerboard * game);
+
+/**
+ * Test if a movement is valid, and execute it if it is
+ * 	Returns 1 if the movement is valid, 0 otherwise
+ *
+ */
+int test_and_execute_movement_draught(int player_color, movement m, checkerboard * game);
+
+/**
  * Moves a checker
  *
  */
 void move_checker(int player_color, movement m, int capture, checkerboard * game);
+
+/**
+ * Moves a draught
+ * 
+ */
+void move_draught(int player_color, movement m, int capture, square captured_pos, checkerboard * game);
+
+/**
+ * Promote checkers to draught
+ * 
+ */
+void promote_checkers(checkerboard * game, int player_color);
 
 /**
  * Starts a game with the given checkerboard
