@@ -61,3 +61,15 @@ void send_reject_new_game_request(int socket_descriptor, player from){
     strcpy(f.data, from.name);
     write_to_client(socket_descriptor, &f);
 }
+
+void send_accept_new_game_request(int socket_descriptor, player from, player * players, int cpt_players){
+    frame f;
+    strcpy(f.data_type, SEND_ACCEPT_NEW_GAME_REQUEST);
+    strcpy(f.data, from.name);
+    write_to_client(socket_descriptor, &f);
+
+    frame f2;
+    strcpy(f.data_type, CLIENT_BUSY);
+    memcpy(f.data, &from, sizeof(from));
+    alert_all_client(&f, cpt_players, players);
+}

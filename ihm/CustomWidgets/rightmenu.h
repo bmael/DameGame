@@ -29,6 +29,7 @@ signals:
     void rmPlayerFromView(player);
 
     void askNewGameWith(player);
+    void askSetBusy(player);
 
 private slots:
     void on_pushButton_clicked();

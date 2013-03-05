@@ -25,6 +25,8 @@ signals:
 
     void advisePlayerForGame(QString n);
     void advisePlayerForAbortedGame(QString n);
+    void clientBusy(player p);
+    void startGame();
 
 
 public slots:

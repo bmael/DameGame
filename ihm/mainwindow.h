@@ -38,11 +38,15 @@ private slots:
     void createGame(player other);    // Creates a new game between this client and another player.
     void adviseForGame(QString name); // Display a QMessageBox to advise the client about a new game request.
     void adviseForAbortedGame(QString name); // Display a QMessageBox to advise the client about a rejected new game.
+    void startGame();                 // Launch the game
 
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
+
     void askAddPlayer(player);  // Emits when we have to add a new player in our list.
     void askRmPlayer(player);   // Emits when a client is disconnected.
+
+    void askSetBusy(player p);  // Emits when a game is starting
 
 private:
     void startListeners();      // Starts all listeners threads

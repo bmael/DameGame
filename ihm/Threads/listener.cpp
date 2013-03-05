@@ -49,6 +49,16 @@ void Listener::run()
             emit advisePlayerForAbortedGame(QString::fromStdString(f.data));
        }
 
+        if(strcmp(f.data_type,SEND_ACCEPT_NEW_GAME_REQUEST) == 0){
+            qDebug() << "[ACCEPT_GAME]";
+            emit startGame();
+       }
+
+        if(strcmp(f.data_type,CLIENT_BUSY) == 0){
+            qDebug() << "[Client_busy] : " << f.data;
+            emit clientBusy(*((player *)f.data));
+       }
+
     }
 }
 

@@ -12,6 +12,12 @@ PlayersOnline::PlayersOnline(QWidget *parent) :
     _model = new QStandardItemModel(this);
     connect(ui->listView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClickedItem(QModelIndex)));
 
+    _free = new QStandardItem("free");
+    _free->setIcon(QIcon(":/icons/free"));
+
+    _busy = new QStandardItem("busy");
+    _busy->setIcon(QIcon(":/icons/busy"));
+
     ui->listView->setModel(_model);
 }
 
@@ -29,7 +35,8 @@ void PlayersOnline::addPlayer(player toAdd)
 {
     QStandardItem * item = new QStandardItem(QString::fromStdString(toAdd.name));
     item->setEditable(false);
-    item->setIcon(QIcon(":/icons/user"));
+    item->setIcon(QIcon(":/icons/free"));
+
     _model->appendRow(item);
 }
 
@@ -46,4 +53,20 @@ void PlayersOnline::doubleClickedItem(QModelIndex i)
     player p;
     strcpy(p.name, (char*)_model->item(i.row())->text().toStdString().c_str());
     emit askNewGameWith(p);
+}
+
+void PlayersOnline::setBusy(player p)
+{
+    QList<QStandardItem *> itemList = _model->findItems(QString::fromStdString(p.name));
+    if(!itemList.isEmpty()){
+        itemList.at(0)->setIcon(QIcon(":/icons/busy"));
+    }
+}
+
+void PlayersOnline::setFree(player p)
+{
+    QList<QStandardItem *> itemList = _model->findItems(QString::fromStdString(p.name));
+    if(!itemList.isEmpty()){
+        itemList.at(0)->setIcon(QIcon(":/icons/free"));
+    }
 }

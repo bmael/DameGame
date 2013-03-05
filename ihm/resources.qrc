@@ -7,5 +7,7 @@
         <file alias="about">resources/icons/about.png</file>
         <file alias="quit">resources/icons/quit.png</file>
         <file alias="user">resources/icons/user.png</file>
+        <file alias="free">resources/icons/freeUser.png</file>
+        <file alias="busy">resources/icons/busyUser.png</file>
     </qresource>
 </RCC>

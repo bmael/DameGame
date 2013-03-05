@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(askAddPlayer(player)), ui->rightMenuWidget, SIGNAL(addPlayerToView(player)));
     connect(this, SIGNAL(askRmPlayer(player)), ui->rightMenuWidget, SIGNAL(rmPlayerFromView(player)));
     connect(ui->rightMenuWidget, SIGNAL(askNewGameWith(player)), this, SLOT(createGame(player)));
+    connect(this, SIGNAL(askSetBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
 
 }
 
@@ -198,6 +199,9 @@ void MainWindow::startListeners()
 
     connect(_listener,  SIGNAL(advisePlayerForGame(QString)), this, SLOT(adviseForGame(QString)));
     connect(_listener, SIGNAL(advisePlayerForAbortedGame(QString)), this, SLOT(adviseForAbortedGame(QString)));
+
+    connect(_listener, SIGNAL(startGame()), this, SLOT(startGame()));
+    connect(_listener, SIGNAL(clientBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
 }
 
 /**
@@ -219,12 +223,11 @@ void MainWindow::createGame(player other)
     if(strcmp(_player.name, other.name) != 0){
         qDebug() << "[Create_game] : creating game with " << other.name;
 
-
-
         QMessageBox box(QMessageBox::Information,tr("Starting a game"),QString(tr("Are you sure to start a game with ") + other.name), QMessageBox::Yes | QMessageBox::No);
         int res = box.exec();
         switch(res){
             case QMessageBox::Yes:
+
                 frame f;
                 strcpy(f.data_type, ASK_NEW_GAME);
                 strcpy(f.data, other.name);
@@ -250,10 +253,18 @@ void MainWindow::adviseForGame(QString name)
                     QString(name + tr(" wants to play with you.\nDo you accept ?")),
                     QMessageBox::Yes | QMessageBox::No);
     int res = infoBox.exec();
+    frame f;
     switch(res){
         case QMessageBox::No:
-            frame f;
+
             strcpy(f.data_type, REJECT_NEW_GAME);
+            strcpy(f.data, (char*)name.toStdString().c_str());
+            write_to_server(_player.socket, &f);
+            break;
+
+        case QMessageBox::Yes:
+        qDebug() << "[Info_box] : Game is accepted";
+            strcpy(f.data_type, ACCEPT_NEW_GAME);
             strcpy(f.data, (char*)name.toStdString().c_str());
             write_to_server(_player.socket, &f);
             break;
@@ -267,4 +278,10 @@ void MainWindow::adviseForAbortedGame(QString name)
                     QString(name + tr(" don't accept your game.")));
     infoBox.exec();
 
+}
+
+void MainWindow::startGame()
+{
+    qDebug() << "[start_game] : starting the game";
+    emit askSetBusy(_player);
 }

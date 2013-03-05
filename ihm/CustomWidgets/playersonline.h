@@ -28,14 +28,18 @@ signals:
 public slots:
     void addPlayer(player toAdd);
     void removePlayer(player toRm);
+    void setBusy(player p);
+    void setFree(player p);
 
 private slots:
     void doubleClickedItem(QModelIndex i);
-    
+
 private:
     Ui::PlayersOnline *ui;
 
     QStandardItemModel * _model;
+    QStandardItem * _free;
+    QStandardItem * _busy;
 
 };
 

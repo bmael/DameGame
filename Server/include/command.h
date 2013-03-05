@@ -16,7 +16,12 @@
 
 #define ASK_NEW_GAME        "000A"
 #define SEND_NEW_GAME_REQUEST "000B"
+
 #define REJECT_NEW_GAME     "000C"
 #define SEND_REJECT_NEW_GAME_REQUEST    "000D"
+
+#define ACCEPT_NEW_GAME     "000E"
+#define SEND_ACCEPT_NEW_GAME_REQUEST "000F"
+#define CLIENT_BUSY         "0010"
 
 #endif

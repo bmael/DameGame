@@ -18,4 +18,5 @@ void send_new_game_request(int socket_descriptor, player from);
 
 void send_reject_new_game_request(int socket_descriptor, player from);
 
+void send_accept_new_game_request(int socket_descriptor, player from, player * players, int cpt_players);
 
