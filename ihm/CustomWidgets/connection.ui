@@ -94,6 +94,9 @@
        <property name="text">
         <string>localhost</string>
        </property>
+       <property name="cursorMoveStyle">
+        <enum>Qt::LogicalMoveStyle</enum>
+       </property>
       </widget>
      </item>
      <item>
@@ -229,6 +232,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="dragEnabled">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -265,6 +271,12 @@
       <widget class="QPushButton" name="connectPushButton">
        <property name="text">
         <string>Connection</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

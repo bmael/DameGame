@@ -28,6 +28,8 @@ signals:
     void addPlayerToView(player);
     void rmPlayerFromView(player);
 
+    void askNewGameWith(player);
+
 private slots:
     void on_pushButton_clicked();
 

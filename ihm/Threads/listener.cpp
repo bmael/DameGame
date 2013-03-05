@@ -1,6 +1,7 @@
 #include "listener.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 Listener::Listener(int socket_descriptor, QObject *parent) :
     QThread(parent), _socket_descriptor(socket_descriptor), stop(false)
@@ -38,6 +39,16 @@ void Listener::run()
            removePlayer(ps);
        }
 
+        if(strcmp(f.data_type,SEND_NEW_GAME_REQUEST) == 0){
+            qDebug() << "[ASK_GAME]";
+            emit advisePlayerForGame(QString::fromStdString(f.data));
+       }
+
+        if(strcmp(f.data_type,SEND_REJECT_NEW_GAME_REQUEST) == 0){
+            qDebug() << "[REJECT_GAME]";
+            emit advisePlayerForAbortedGame(QString::fromStdString(f.data));
+       }
+
     }
 }
 
@@ -66,3 +77,4 @@ void Listener::removePlayer(player p)
     emit removePlayerFromView(p);
 
 }
+

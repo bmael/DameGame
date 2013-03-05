@@ -22,9 +22,15 @@ public:
 
     void clear();
 
+signals:
+    void askNewGameWith(player p);
+
 public slots:
     void addPlayer(player toAdd);
     void removePlayer(player toRm);
+
+private slots:
+    void doubleClickedItem(QModelIndex i);
     
 private:
     Ui::PlayersOnline *ui;

@@ -21,6 +21,8 @@ RightMenu::RightMenu(QWidget *parent) :
     /* Online players */
     connect(this, SIGNAL(addPlayerToView(player)), ui->playersOnlineWidget, SLOT(addPlayer(player)));
     connect(this, SIGNAL(rmPlayerFromView(player)), ui->playersOnlineWidget, SLOT(removePlayer(player)));
+
+    connect(ui->playersOnlineWidget, SIGNAL(askNewGameWith(player)), this, SIGNAL(askNewGameWith(player)));
 }
 
 /**

@@ -38,11 +38,9 @@ void * client_manager_cmd(void * sock){
                  &cpt_players,
                  &cpt_max_client);
 		
-        //send_nb_players(new_socket_descriptor, cpt_players);
         send_all_players(new_socket_descriptor, players, cpt_players);
 
         display_online_players(cpt_players, players);
-//        memset(&f, 0, sizeof(f));
 	
     } // END CONNECTION
     
@@ -51,24 +49,62 @@ void * client_manager_cmd(void * sock){
       
         disconnection(&f, players, &cpt_players);
         display_online_players(cpt_players, players);
-//        memset(&f, 0, sizeof(f));
 
 	
     }// END DISCONNECTION
 
     /* action : GET_CLIENT_LIST */
     if(strcmp(f.data_type, GET_CLIENT_LIST) == 0){
-
         send_players_list(new_socket_descriptor, players, cpt_players);
-//        memset(&f, 0, sizeof(f));
-
     }
+
     /* action : SEND_MSG_CHAT */
     if(strcmp(f.data_type, SEND_MSG_CHAT) == 0){
-
         send_msg_chat(f, players, cpt_players);
-//        memset(&f, 0, sizeof(f));
+    }
 
+    /* action : ASK_NEW_GAME */
+    if(strcmp(f.data_type, ASK_NEW_GAME) == 0){
+
+        int j = 0;
+        int ok = 0;
+        while((!ok) && (j < cpt_players)){
+            if(players[j].socket == new_socket_descriptor){ok = 1;}
+            else{j++;}
+        }
+
+        //search the players on the list
+        int i = 0;
+        int find = 0;
+        while((!find) && (i < cpt_players)){
+          if(strcmp(players[i].name, f.data) == 0){find=1;}
+          else{i++;}
+        }
+        if(find){
+            send_new_game_request(players[i].socket, players[j]);
+        }
+
+    }
+
+    /* action : REJECT_NEW_GAME */
+    if(strcmp(f.data_type, REJECT_NEW_GAME) == 0){
+        int j = 0;
+        int ok = 0;
+        while((!ok) && (j < cpt_players)){
+            if(players[j].socket == new_socket_descriptor){ok = 1;}
+            else{j++;}
+        }
+
+        //search the players on the list
+        int i = 0;
+        int find = 0;
+        while((!find) && (i < cpt_players)){
+          if(strcmp(players[i].name, f.data) == 0){find=1;}
+          else{i++;}
+        }
+        if(find){
+            send_reject_new_game_request(players[i].socket, players[j]);
+        }
     }
 
     pthread_mutex_unlock(&players_mutex);

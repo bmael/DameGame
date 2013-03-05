@@ -19,8 +19,13 @@ public:
 
 signals:
     void addMsg(QString);
+
     void addPlayerToView(player p);
     void removePlayerFromView(player p);
+
+    void advisePlayerForGame(QString n);
+    void advisePlayerForAbortedGame(QString n);
+
 
 public slots:
 
@@ -30,6 +35,7 @@ protected:
 private:
     void addPlayer(player p);
     void removePlayer(player p);
+
 
 private:
     int _socket_descriptor;

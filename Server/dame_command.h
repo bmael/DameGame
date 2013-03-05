@@ -14,4 +14,8 @@ void send_player(int socket_descriptor, player p);
 
 void send_all_players(int socket_descriptor, player * players, int cpt_players);
 
+void send_new_game_request(int socket_descriptor, player from);
+
+void send_reject_new_game_request(int socket_descriptor, player from);
+
 

@@ -10,6 +10,7 @@ PlayersOnline::PlayersOnline(QWidget *parent) :
     ui->setupUi(this);
 
     _model = new QStandardItemModel(this);
+    connect(ui->listView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClickedItem(QModelIndex)));
 
     ui->listView->setModel(_model);
 }
@@ -34,24 +35,15 @@ void PlayersOnline::addPlayer(player toAdd)
 
 void PlayersOnline::removePlayer(player toRm)
 {
-
-    //    int i = 0;
-    //    bool isFind = false;
-    //    while(!isFind && i < _model->rowCount()){
-
-    //        if(_model->item(i)->text() == QString::fromStdString(toRm.name)){
-    //            isFind = true;
-    //            break;
-    //        }
-    //        i++;
-    //    }
     QList<QStandardItem *> itemList = _model->findItems(QString::fromStdString(toRm.name));
     if(!itemList.isEmpty()){
-        qDebug() << "PlyaersOnline Widget : rm : " << itemList.at(0)->text();
-//        _model->takeItem(i);
         _model->removeRow(itemList.at(0)->row());
-       // _model->setRowCount(_model->rowCount()-1);
-
-        //delete itemList.at(0);
     }
+}
+
+void PlayersOnline::doubleClickedItem(QModelIndex i)
+{
+    player p;
+    strcpy(p.name, (char*)_model->item(i.row())->text().toStdString().c_str());
+    emit askNewGameWith(p);
 }

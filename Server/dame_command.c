@@ -36,8 +36,6 @@ void send_player(int socket_descriptor, player p){
 
     printf("[Send_player] : %s", f.data);
 
-    //strcpy(f.data, (char*)&p);
-
     write_to_client(socket_descriptor, &f);
 }
 
@@ -46,4 +44,20 @@ void send_all_players(int socket_descriptor, player * players, int cpt_players){
     for(i=0;i<cpt_players;i++){
         send_player(socket_descriptor, players[i]);
     }
+}
+
+void send_new_game_request(int socket_descriptor, player from){
+
+    frame f;
+    strcpy(f.data_type, SEND_NEW_GAME_REQUEST);
+    strcpy(f.data, from.name);
+    write_to_client(socket_descriptor, &f);
+
+}
+
+void send_reject_new_game_request(int socket_descriptor, player from){
+    frame f;
+    strcpy(f.data_type, SEND_REJECT_NEW_GAME_REQUEST);
+    strcpy(f.data, from.name);
+    write_to_client(socket_descriptor, &f);
 }

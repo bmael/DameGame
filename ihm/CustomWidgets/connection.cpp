@@ -8,6 +8,7 @@ Connection::Connection(QWidget *parent) :
     ui(new Ui::Connection)
 {
     ui->setupUi(this);
+    ui->pseudoLineEdit->setFocus();
 }
 
 Connection::~Connection()

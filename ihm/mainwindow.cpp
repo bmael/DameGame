@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Online players
     connect(this, SIGNAL(askAddPlayer(player)), ui->rightMenuWidget, SIGNAL(addPlayerToView(player)));
     connect(this, SIGNAL(askRmPlayer(player)), ui->rightMenuWidget, SIGNAL(rmPlayerFromView(player)));
+    connect(ui->rightMenuWidget, SIGNAL(askNewGameWith(player)), this, SLOT(createGame(player)));
 
 }
 
@@ -191,8 +192,12 @@ void MainWindow::startListeners()
     // Start a thread for listening server requests.
     _listener = new Listener(_player.socket, this);
     connect(_listener, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
+
     connect(_listener, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));
     connect(_listener, SIGNAL(removePlayerFromView(player)), this, SIGNAL(askRmPlayer(player)));
+
+    connect(_listener,  SIGNAL(advisePlayerForGame(QString)), this, SLOT(adviseForGame(QString)));
+    connect(_listener, SIGNAL(advisePlayerForAbortedGame(QString)), this, SLOT(adviseForAbortedGame(QString)));
 }
 
 /**
@@ -203,4 +208,63 @@ void MainWindow::startListeners()
 void MainWindow::stopListeners()
 {
     _listener->setStop(true);
+}
+
+/**
+ * @brief Creates a new game with another player.
+ * @param player other - Other player for playing
+ */
+void MainWindow::createGame(player other)
+{
+    if(strcmp(_player.name, other.name) != 0){
+        qDebug() << "[Create_game] : creating game with " << other.name;
+
+
+
+        QMessageBox box(QMessageBox::Information,tr("Starting a game"),QString(tr("Are you sure to start a game with ") + other.name), QMessageBox::Yes | QMessageBox::No);
+        int res = box.exec();
+        switch(res){
+            case QMessageBox::Yes:
+                frame f;
+                strcpy(f.data_type, ASK_NEW_GAME);
+                strcpy(f.data, other.name);
+                write_to_server(_player.socket, &f);
+
+                QMessageBox infoBox(QMessageBox::Information,
+                                tr("Request sent"),
+                                QString(tr("Waiting for confirmation by ") + other.name));
+                infoBox.exec();
+
+                break;
+
+        }
+
+    }
+
+}
+
+void MainWindow::adviseForGame(QString name)
+{
+    QMessageBox infoBox(QMessageBox::Information,
+                    tr("Game"),
+                    QString(name + tr(" wants to play with you.\nDo you accept ?")),
+                    QMessageBox::Yes | QMessageBox::No);
+    int res = infoBox.exec();
+    switch(res){
+        case QMessageBox::No:
+            frame f;
+            strcpy(f.data_type, REJECT_NEW_GAME);
+            strcpy(f.data, (char*)name.toStdString().c_str());
+            write_to_server(_player.socket, &f);
+            break;
+    }
+}
+
+void MainWindow::adviseForAbortedGame(QString name)
+{
+    QMessageBox infoBox(QMessageBox::Information,
+                    tr("Game"),
+                    QString(name + tr(" don't accept your game.")));
+    infoBox.exec();
+
 }
