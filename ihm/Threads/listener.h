@@ -38,6 +38,8 @@ private:
     void addPlayer(player p);
     void removePlayer(player p);
 
+    void setClientBusy(player p);
+
 
 private:
     int _socket_descriptor;

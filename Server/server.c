@@ -124,6 +124,8 @@ void * client_manager_cmd(void * sock){
           else{i++;}
         }
         if(find){
+            players[j].color = 1;
+            players[i].color = -1;
             send_accept_new_game_request(new_socket_descriptor, players[j], players, cpt_players);
             send_accept_new_game_request(players[i].socket, players[i], players, cpt_players);
         }

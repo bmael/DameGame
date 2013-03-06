@@ -64,6 +64,7 @@ void connection(frame * f,
     strcpy(to_add.name, f->data);
     //memcpy(to_add.name, f->data, 10);
     to_add.socket = socket_descriptor;
+    to_add.color = 0;
 
     players[*cpt_players] = to_add;
 
