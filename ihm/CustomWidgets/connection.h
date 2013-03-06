@@ -27,6 +27,8 @@ signals:
 private slots:
     void on_connectPushButton_clicked();
 
+    void on_pseudoLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::Connection *ui;
 };
