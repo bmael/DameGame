@@ -29,6 +29,7 @@
 
 #define OPPONENT_QUIT       "0013"
 #define ADVISE_OPPONENT_QUIT "0014"
+#define CLIENT_FREE         "0015"
 
 
 #endif

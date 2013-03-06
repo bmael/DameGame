@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
     /* Opponent player */
     strcpy(_opponent_player.name , "");
 
+    /* player */
+    strcpy(_player.name, "");
+    _player.color = 0;
+
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
             this, SLOT(serverConnection(QString, int, QString)));
@@ -226,7 +230,10 @@ void MainWindow::startListeners()
     connect(_listener, SIGNAL(advisePlayerForAbortedGame(QString)), this, SLOT(adviseForAbortedGame(QString)));
 
     connect(_listener, SIGNAL(startGame()), this, SLOT(startGame()));
+
     connect(_listener, SIGNAL(clientBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
+    connect(_listener, SIGNAL(clientFree(player)), ui->rightMenuWidget, SIGNAL(askSetFree(player)));
+
     connect(_listener, SIGNAL(setOpponent(player)), this, SLOT(setOpponent(player)));
     connect(_listener, SIGNAL(opponentQuit(player)), this, SLOT(opponentQuit(player)));
 
@@ -248,7 +255,7 @@ void MainWindow::stopListeners()
  */
 void MainWindow::createGame(player other)
 {
-    if(strcmp(_player.name, other.name) != 0){
+    if(strcmp(_player.name, other.name) != 0 && _player.color == 0 && strlen(_opponent_player.name) == 0 ){
         qDebug() << "[Create_game] : creating game with " << other.name;
 
         QMessageBox box(QMessageBox::Information,tr("Starting a game"),QString(tr("Are you sure to start a game with ") + other.name), QMessageBox::Yes | QMessageBox::No);

@@ -23,3 +23,4 @@ void send_accept_new_game_request(int socket_descriptor, player from, player * p
 void send_opponent(int socket_descriptor, player opponent);
 
 void advise_opponent_quit(int socket_descriptor, player quit);
+

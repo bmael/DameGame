@@ -155,7 +155,16 @@ void * client_manager_cmd(void * sock){
           else{i++;}
         }
         if(find){
+
+            players[j].color = 0;
+            players[i].color = 0;
+
             advise_opponent_quit(players[i].socket, players[j]);
+            frame f2;
+            strcpy(f2.data_type, CLIENT_FREE);
+            memcpy(f2.data, &players[i], sizeof(players[i]));
+            alert_all_client(&f2, cpt_players, players);
+
         }
 
     }

@@ -28,6 +28,7 @@ signals:
     void advisePlayerForGame(QString n);
     void advisePlayerForAbortedGame(QString n);
     void clientBusy(player p);
+    void clientFree(player p);
     void startGame();
 
     void setOpponent(player p);
@@ -44,6 +45,7 @@ private:
     void removePlayer(player p);
 
     void setClientBusy(player p);
+
 
 
 private:

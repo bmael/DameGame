@@ -86,4 +86,6 @@ void advise_opponent_quit(int socket_descriptor, player quit){
     strcpy(f.data_type, ADVISE_OPPONENT_QUIT);
     memcpy(f.data, &quit, sizeof(quit));
     write_to_client(socket_descriptor, &f);
+
 }
+

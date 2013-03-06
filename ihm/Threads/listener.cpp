@@ -75,6 +75,11 @@ void Listener::run()
            emit opponentQuit(*((player *)f.data));
        }
 
+        if(strcmp(f.data_type,CLIENT_FREE) == 0){
+            qDebug() << "[CLIENT_FREE] : " << f.data;
+           emit clientFree(*((player *)f.data));
+       }
+
     }
 }
 
