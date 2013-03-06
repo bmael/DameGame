@@ -65,11 +65,25 @@ void send_reject_new_game_request(int socket_descriptor, player from){
 void send_accept_new_game_request(int socket_descriptor, player from, player * players, int cpt_players){
     frame f;
     strcpy(f.data_type, SEND_ACCEPT_NEW_GAME_REQUEST);
-    strcpy(f.data, from.name);
+    memcpy(f.data, &from, sizeof(from));
     write_to_client(socket_descriptor, &f);
 
     frame f2;
     strcpy(f.data_type, CLIENT_BUSY);
     memcpy(f.data, &from, sizeof(from));
     alert_all_client(&f, cpt_players, players);
+}
+
+void send_opponent(int socket_descriptor, player opponent){
+    frame f;
+    strcpy(f.data_type, SEND_OPPONENT);
+    memcpy(f.data, &opponent, sizeof(opponent));
+    write_to_client(socket_descriptor, &f);
+}
+
+void advise_opponent_quit(int socket_descriptor, player quit){
+    frame f;
+    strcpy(f.data_type, ADVISE_OPPONENT_QUIT);
+    memcpy(f.data, &quit, sizeof(quit));
+    write_to_client(socket_descriptor, &f);
 }

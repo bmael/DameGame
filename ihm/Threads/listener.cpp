@@ -65,13 +65,21 @@ void Listener::run()
             setClientBusy(*((player *)f.data));
        }
 
+        if(strcmp(f.data_type,SEND_OPPONENT) == 0){
+            qDebug() << "[SEND_OPPONENT] : " << f.data;
+            emit setOpponent(*((player *)f.data));
+       }
+
+        if(strcmp(f.data_type,ADVISE_OPPONENT_QUIT) == 0){
+            qDebug() << "[OPPONENT_QUIT] : " << f.data;
+           emit opponentQuit(*((player *)f.data));
+       }
+
     }
 }
 
 void Listener::addPlayer(player p)
 {
-    qDebug() << "[Player_listener] : add player : " << p.name;
-    qDebug() << "[Player_listener] : color : " << p.color;
     players.append(p);
     emit addPlayerToView(p);
 
@@ -79,7 +87,6 @@ void Listener::addPlayer(player p)
 
 void Listener::removePlayer(player p)
 {
-    qDebug() << "[Player_listener] : remove player : " << p.name;
     bool isFind = false;
     int i = 0;
     while(!isFind && i < players.size()){

@@ -1,5 +1,5 @@
 ﻿/*----------------------------------------------
-Serveur à lancer avant le client
+Server to start before the clients
 ------------------------------------------------*/
 
 
@@ -109,6 +109,8 @@ void * client_manager_cmd(void * sock){
 
     /* action : ACCEPT_NEW_GAME */
     if(strcmp(f.data_type, ACCEPT_NEW_GAME) == 0){
+
+        //the player whose accept invitation
         int j = 0;
         int ok = 0;
         while((!ok) && (j < cpt_players)){
@@ -116,7 +118,7 @@ void * client_manager_cmd(void * sock){
             else{j++;}
         }
 
-        //search the players on the list
+        //search the players whose ask to play
         int i = 0;
         int find = 0;
         while((!find) && (i < cpt_players)){
@@ -128,7 +130,34 @@ void * client_manager_cmd(void * sock){
             players[i].color = -1;
             send_accept_new_game_request(new_socket_descriptor, players[j], players, cpt_players);
             send_accept_new_game_request(players[i].socket, players[i], players, cpt_players);
+
+            send_opponent(players[i].socket, players[j]);
+            send_opponent(players[j].socket, players[i]);
         }
+    }
+
+    /* action : OPPONENT_QUIT */
+    if(strcmp(f.data_type, OPPONENT_QUIT) == 0){
+
+        //the player whose quit the game
+        int j = 0;
+        int ok = 0;
+        while((!ok) && (j < cpt_players)){
+            if(players[j].socket == new_socket_descriptor){ok = 1;}
+            else{j++;}
+        }
+
+        //the player to advise
+        int i = 0;
+        int find = 0;
+        while((!find) && (i < cpt_players)){
+          if(strcmp(players[i].name, f.data) == 0){find=1;}
+          else{i++;}
+        }
+        if(find){
+            advise_opponent_quit(players[i].socket, players[j]);
+        }
+
     }
 
     pthread_mutex_unlock(&players_mutex);

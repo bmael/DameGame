@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     /* Init Threads */
     _listener = NULL;
 
+    /* Opponent player */
+    strcpy(_opponent_player.name , "");
+
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
             this, SLOT(serverConnection(QString, int, QString)));
@@ -36,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(askRmPlayer(player)), ui->rightMenuWidget, SIGNAL(rmPlayerFromView(player)));
     connect(ui->rightMenuWidget, SIGNAL(askNewGameWith(player)), this, SLOT(createGame(player)));
     connect(this, SIGNAL(askSetBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
+    connect(this, SIGNAL(askSetFree(player)), ui->rightMenuWidget, SIGNAL(askSetFree(player)));
 
 }
 
@@ -112,12 +116,22 @@ void MainWindow::serverDisconnection()
 
     ui->rightMenuWidget->clear();
 
+    frame f ;
+    //Advise the opponent if the client is in a game
+    if(strlen(_opponent_player.name) != 0){
+        qDebug() << "PPPPPPPPPPPPPPPPPPPPP I'm quit the game";
+        strcpy(f.data_type, OPPONENT_QUIT);
+        memcpy(f.data, &_opponent_player, sizeof(_opponent_player));
+        write_to_server(_player.socket, &f);
+    }
+
     //Advising the server for the disconnection
-    frame f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
+    f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
     write_to_server(_player.socket,&f);
 
     //disconnection of the client
     server_disconnection(_player.socket);
+
 
     stopListeners(); // Stop all listeners threads
 
@@ -213,6 +227,9 @@ void MainWindow::startListeners()
 
     connect(_listener, SIGNAL(startGame()), this, SLOT(startGame()));
     connect(_listener, SIGNAL(clientBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
+    connect(_listener, SIGNAL(setOpponent(player)), this, SLOT(setOpponent(player)));
+    connect(_listener, SIGNAL(opponentQuit(player)), this, SLOT(opponentQuit(player)));
+
 }
 
 /**
@@ -295,4 +312,22 @@ void MainWindow::startGame()
 {
     qDebug() << "[start_game] : starting the game";
     emit askSetBusy(_player);
+}
+
+void MainWindow::setOpponent(player p)
+{
+    qDebug() << "[set_opponent] : player " << p.name;
+    _opponent_player = p;
+}
+
+void MainWindow::opponentQuit(player p)
+{
+    strcpy(_opponent_player.name, "");
+    QMessageBox infoBox(QMessageBox::Information,
+                        tr("Opponent quit"),
+                        QString(p.name + tr(" has been disconnected from the server.")));
+    infoBox.exec();
+    emit askSetFree(_player);
+
+
 }

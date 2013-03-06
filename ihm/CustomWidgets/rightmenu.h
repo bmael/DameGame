@@ -30,6 +30,7 @@ signals:
 
     void askNewGameWith(player);
     void askSetBusy(player);
+    void askSetFree(player);
 
 private slots:
     void on_pushButton_clicked();

@@ -25,5 +25,10 @@
 #define ACCEPT_NEW_GAME     "000F"
 #define SEND_ACCEPT_NEW_GAME_REQUEST "0010"
 #define CLIENT_BUSY         "0011"
+#define SEND_OPPONENT       "0012"
+
+#define OPPONENT_QUIT       "0013"
+#define ADVISE_OPPONENT_QUIT "0014"
+
 
 #endif

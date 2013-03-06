@@ -30,6 +30,9 @@ signals:
     void clientBusy(player p);
     void startGame();
 
+    void setOpponent(player p);
+    void opponentQuit(player p);
+
 
 public slots:
 

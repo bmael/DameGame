@@ -41,6 +41,8 @@ private slots:
     void adviseForGame(QString name); // Display a QMessageBox to advise the client about a new game request.
     void adviseForAbortedGame(QString name); // Display a QMessageBox to advise the client about a rejected new game.
     void startGame();                 // Launch the game
+    void setOpponent(player p);       // Init the opponent player of the client.
+    void opponentQuit(player p);      // Advise the client that the opponent quit the game.
 
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
@@ -49,10 +51,12 @@ signals:
     void askRmPlayer(player);   // Emits when a client is disconnected.
 
     void askSetBusy(player p);  // Emits when a game is starting
+    void askSetFree(player p);  // Emits at the end of a game.
 
 private:
     void startListeners();      // Starts all listeners threads
     void stopListeners();       // Stops all listeners threads
+
 
 
 private:
@@ -66,6 +70,7 @@ private:
     servent *_ptr_service;      // information about a service
 
     player _player;             // the player
+    player _opponent_player;    // the opponent player (Null if player is not in a game)
 
     /* Threads */
     Listener * _listener;
