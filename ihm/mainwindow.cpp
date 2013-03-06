@@ -127,6 +127,14 @@ void MainWindow::serverDisconnection()
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);
 }
 
+void MainWindow::pseudoAlreadyExists(QString pseudo)
+{
+    QMessageBox box(QMessageBox::Information,tr("Pseudo already exists"),QString(tr("Pseudo ") + pseudo + tr(" already exists. Please choose another.")));
+    box.exec();
+
+    this->serverDisconnection();
+}
+
 /**
  * @brief Shows or hides the right menu with an animation
  * according to the value of \ref _rightMenuHidden attribute.
@@ -165,7 +173,7 @@ void MainWindow::on_showHidePushButton_clicked()
 void MainWindow::sendChatMessage(QString msg)
 {
     qDebug() << msg;
-    char data[sizeof(DATA_SIZE)] = "\0";
+    char data[DATA_SIZE] = "\0";
     strcat(data, "[");
     strcat(data, _player.name);
     strcat(data, "] : ");
@@ -192,6 +200,9 @@ void MainWindow::startListeners()
 {
     // Start a thread for listening server requests.
     _listener = new Listener(_player.socket, this);
+
+    connect(_listener, SIGNAL(pseudoAlreadyExists(QString)), this, SLOT(pseudoAlreadyExists(QString)));
+
     connect(_listener, SIGNAL(addMsg(QString)), this, SLOT(addMsg(QString)));
 
     connect(_listener, SIGNAL(addPlayerToView(player)), this, SIGNAL(askAddPlayer(player)));

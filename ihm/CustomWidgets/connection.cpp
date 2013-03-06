@@ -9,6 +9,8 @@ Connection::Connection(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->pseudoLineEdit->setFocus();
+    ui->pseudoError->hide();
+    ui->connectPushButton->setEnabled(false);
 }
 
 Connection::~Connection()
@@ -37,7 +39,26 @@ void Connection::on_connectPushButton_clicked()
 
 void Connection::clean()
 {
-//    ui->serverLineEdit->clear();
-//    ui->portLineEdit->clear();
     ui->pseudoLineEdit->clear();
+}
+
+void Connection::on_pseudoLineEdit_textChanged(const QString &arg1)
+{
+
+    if(ui->pseudoLineEdit->text().size() > 10){
+        ui->pseudoError->show();
+        ui->connectPushButton->setEnabled(false);
+
+    }else{
+        if(ui->pseudoLineEdit->text().size() > 0){
+            ui->pseudoError->hide();
+            ui->connectPushButton->setEnabled(true);
+        }else{
+            if(ui->pseudoLineEdit->text().isEmpty()){
+                ui->pseudoError->hide();
+                ui->connectPushButton->setEnabled(false);
+            }
+        }
+    }
+
 }

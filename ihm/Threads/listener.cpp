@@ -22,6 +22,12 @@ void Listener::run()
 
         frame f;
         read_server_information(_socket_descriptor, &f);
+
+        if(strcmp(f.data_type,PSEUDO_ALREADY_EXISTS) == 0){
+            qDebug() << "[PSEUDO_ALREADY_EXISTS] : " << f.data;
+            emit pseudoAlreadyExists(QString::fromStdString(f.data));
+        }
+
         if(strcmp(f.data_type,SEND_MSG_CHAT) == 0){
             qDebug() << "[SEND_MSG_CHAT] : " << f.data;
             emit addMsg(QString::fromStdString(f.data));
@@ -56,7 +62,7 @@ void Listener::run()
 
         if(strcmp(f.data_type,CLIENT_BUSY) == 0){
             qDebug() << "[Client_busy] : " << f.data;
-            emit clientBusy(*((player *)f.data));
+            setClientBusy(*((player *)f.data));
        }
 
     }
@@ -65,6 +71,7 @@ void Listener::run()
 void Listener::addPlayer(player p)
 {
     qDebug() << "[Player_listener] : add player : " << p.name;
+    qDebug() << "[Player_listener] : color : " << p.color;
     players.append(p);
     emit addPlayerToView(p);
 
@@ -85,6 +92,22 @@ void Listener::removePlayer(player p)
 
     players.removeAt(i);
     emit removePlayerFromView(p);
+
+}
+
+void Listener::setClientBusy(player p)
+{
+    bool isFind = false;
+    int i = 0;
+    while(!isFind && i < players.size()){
+        if( strcmp(players.at(i).name, p.name) == 0 ){
+            isFind = true;
+            break;
+        }
+        i++;
+    }
+
+    emit clientBusy(p);
 
 }
 

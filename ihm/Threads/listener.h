@@ -18,6 +18,8 @@ public:
     void setStop(bool s);
 
 signals:
+    void pseudoAlreadyExists(QString);
+
     void addMsg(QString);
 
     void addPlayerToView(player p);
@@ -37,6 +39,8 @@ protected:
 private:
     void addPlayer(player p);
     void removePlayer(player p);
+
+    void setClientBusy(player p);
 
 
 private:

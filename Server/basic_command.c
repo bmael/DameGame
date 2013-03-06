@@ -60,25 +60,39 @@ void connection(frame * f,
         memory_reallocation(players, cpt_max_client);
     }
 
-    player to_add;
-    strcpy(to_add.name, f->data);
-    //memcpy(to_add.name, f->data, 10);
-    to_add.socket = socket_descriptor;
+    int i = 0;
+    int find = 0;
+    while((!find) && (i < *cpt_players)){
+      if(strcmp(players[i].name, f->data) == 0){find=1;}
+      else{i++;}
+    }
+    if(!find){
 
-    players[*cpt_players] = to_add;
+        player to_add;
+        strcpy(to_add.name, f->data);
+        //memcpy(to_add.name, f->data, 10);
+        to_add.socket = socket_descriptor;
+        to_add.color = 0;
 
-    frame f2;
-    strcpy(f2.data_type, ADD_CLIENT);
-    memcpy(f2.data, &to_add, sizeof(to_add));
+        players[*cpt_players] = to_add;
 
-    alert_all_client(&f2, *cpt_players, players);
+        frame f2;
+        strcpy(f2.data_type, ADD_CLIENT);
+        memcpy(f2.data, &to_add, sizeof(to_add));
 
-    *cpt_players += 1;
+        alert_all_client(&f2, *cpt_players, players);
+
+        *cpt_players += 1;
 
 
-    printf("[Connection] : players array updated\n");
+        printf("[Connection] : players array updated\n");
 
-    //send_nb_client(new_socket_descriptor);
+    }else{
+        frame f2;
+        strcpy(f2.data_type, PSEUDO_ALREADY_EXISTS);
+        strcpy(f2.data, f->data);
+        write_to_client(socket_descriptor, &f2);
+    }
 
 
 }

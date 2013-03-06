@@ -30,6 +30,8 @@ private slots:
     void serverConnection(QString host, int port, QString pseudo); //Connects the client to the server
     void serverDisconnection();             // Disconnects the client from the server
 
+    void pseudoAlreadyExists(QString pseudo);
+
     void on_actionQuit_triggered();         // Quits clearly the application
     void on_showHidePushButton_clicked();   // Shows or hides the right menu
     void sendChatMessage(QString msg);      // Sends a message on the chatroom
