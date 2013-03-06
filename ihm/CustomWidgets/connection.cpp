@@ -44,13 +44,21 @@ void Connection::clean()
 
 void Connection::on_pseudoLineEdit_textChanged(const QString &arg1)
 {
+
     if(ui->pseudoLineEdit->text().size() > 10){
         ui->pseudoError->show();
         ui->connectPushButton->setEnabled(false);
+
     }else{
         if(ui->pseudoLineEdit->text().size() > 0){
             ui->pseudoError->hide();
             ui->connectPushButton->setEnabled(true);
+        }else{
+            if(ui->pseudoLineEdit->text().isEmpty()){
+                ui->pseudoError->hide();
+                ui->connectPushButton->setEnabled(false);
+            }
         }
     }
+
 }
