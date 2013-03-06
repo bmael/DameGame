@@ -165,7 +165,7 @@ void MainWindow::on_showHidePushButton_clicked()
 void MainWindow::sendChatMessage(QString msg)
 {
     qDebug() << msg;
-    char data[sizeof(DATA_SIZE)] = "\0";
+    char data[DATA_SIZE] = "\0";
     strcat(data, "[");
     strcat(data, _player.name);
     strcat(data, "] : ");
