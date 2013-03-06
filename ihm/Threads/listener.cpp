@@ -22,6 +22,12 @@ void Listener::run()
 
         frame f;
         read_server_information(_socket_descriptor, &f);
+
+        if(strcmp(f.data_type,PSEUDO_ALREADY_EXISTS) == 0){
+            qDebug() << "[PSEUDO_ALREADY_EXISTS] : " << f.data;
+            emit pseudoAlreadyExists(QString::fromStdString(f.data));
+        }
+
         if(strcmp(f.data_type,SEND_MSG_CHAT) == 0){
             qDebug() << "[SEND_MSG_CHAT] : " << f.data;
             emit addMsg(QString::fromStdString(f.data));
