@@ -104,42 +104,42 @@ void init_gameboard(checkerboard* game){
 
 
 
-int test_movement(int player_color, movement m, checkerboard * game) {
-    // The selected checker is not a player's checker
-    if ( game->gameboard[m.startPoint.line][m.startPoint.column] != player_color ) {
-        printf("\tERROR : The selected checker is not one of the player's checkers\n");
-        return 0;
-    }
-
-    // Square is not empty
-    if ( game->gameboard[m.endPoint.line][m.endPoint.column] != EMPTY_CELL ) {
-        printf("\tERROR : You can't move your checker to a square that is not empty\n");
-        return 0;
-    }
-
-    // Wrong line
-    if( m.endPoint.line != m.startPoint.line + player_color ) {
-		if ( (m.endPoint.line != m.startPoint.line + (player_color*2)) && (game->gameboard[(m.endPoint.line + m.startPoint.line)/2][(m.endPoint.column + m.startPoint.column)/2] != player_color) ) {
-			printf("\tINFO : Capturing an opponent checker\n");
-			return 1;
-		}
-        printf("\tERROR : Wrong line\n");
-        return 0;
-    }
-
-    // Wrong column
-    if( (m.endPoint.column != (m.startPoint.column+1)) && (m.endPoint.column != (m.startPoint.column-1)) ) {
-		if( (m.endPoint.column == (m.startPoint.column+2)) && (m.endPoint.column != (m.startPoint.column-2)) ) {
-			printf("Capturing an opponent checker\n");
-			return 0;
-		}
-        printf("\tERROR : Wrong column\n");
-        return 0;
-    }
-
-    // Otherwise, the movement is valid
-    return 1;
-}
+// int test_movement(int player_color, movement m, checkerboard * game) {
+//     // The selected checker is not a player's checker
+//     if ( game->gameboard[m.startPoint.line][m.startPoint.column] != player_color ) {
+//         printf("\tERROR : The selected checker is not one of the player's checkers\n");
+//         return 0;
+//     }
+// 
+//     // Square is not empty
+//     if ( game->gameboard[m.endPoint.line][m.endPoint.column] != EMPTY_CELL ) {
+//         printf("\tERROR : You can't move your checker to a square that is not empty\n");
+//         return 0;
+//     }
+// 
+//     // Wrong line
+//     if( m.endPoint.line != m.startPoint.line + player_color ) {
+// 		if ( (m.endPoint.line != m.startPoint.line + (player_color*2)) && (game->gameboard[(m.endPoint.line + m.startPoint.line)/2][(m.endPoint.column + m.startPoint.column)/2] != player_color) ) {
+// 			printf("\tINFO : Capturing an opponent checker\n");
+// 			return 1;
+// 		}
+//         printf("\tERROR : Wrong line\n");
+//         return 0;
+//     }
+// 
+//     // Wrong column
+//     if( (m.endPoint.column != (m.startPoint.column+1)) && (m.endPoint.column != (m.startPoint.column-1)) ) {
+// 		if( (m.endPoint.column == (m.startPoint.column+2)) && (m.endPoint.column != (m.startPoint.column-2)) ) {
+// 			printf("Capturing an opponent checker\n");
+// 			return 0;
+// 		}
+//         printf("\tERROR : Wrong column\n");
+//         return 0;
+//     }
+// 
+//     // Otherwise, the movement is valid
+//     return 1;
+// }
 
 
 
@@ -197,11 +197,14 @@ int test_and_execute_movement_checker(int player_color, movement m, checkerboard
 
 
 
-int test_deplace_dame(checkerboard * game, int player_color, movement m) {
+int test_and_execute_movement_draught(int player_color, movement m, checkerboard * game) {
 	int i = m.startPoint.line;
 	int j = m.startPoint.column;
 	
-	while ( i != m.endPoint.line || j != m.endPoint.column ) {
+	int capture_count = 0;
+	square captured_pos;
+	
+	while ( (i != m.endPoint.line) || (j != m.endPoint.column) ) {
 		if( m.endPoint.line > m.startPoint.line ) {
 			i++;
 		}
@@ -215,16 +218,34 @@ int test_deplace_dame(checkerboard * game, int player_color, movement m) {
 		else {
 			j--;
 		}
+		
+		if ( game->gameboard[i][j] != EMPTY_CELL ) {
+			if ( (game->gameboard[i][j] == player_color) || (game->gameboard[i][j] == 2 * player_color) ) {
+				printf("\tERROR : You can't move a draught on one of your piece\n");
+				return 0;
+			}
+			else {
+				capture_count++;
+				captured_pos.line = i;
+				captured_pos.column = j;
+			}
+		}
 	}
-	if( game->gameboard[i][j] != EMPTY_CELL ) {
-		printf("\tERROR : You can't move your draught to a square that is not empty\n");
+// 	if( game->gameboard[i][j] != EMPTY_CELL ) {
+// 		printf("\tERROR : You can't move your draught to a square that is not empty\n");
+// 		return 0;
+// 	}
+	if ( capture_count > 1 ) {
+		printf("\tERROR : You can only capture one piece in a single movement\n");
 		return 0;
 	}
-	
-	return 1;
-}
-
-int test_and_execute_movement_draught(int player_color, movement m, checkerboard * game) {
+	else if ( capture_count == 1 ) {
+		printf("\tINFO : Capturing an opponent checker\n");
+		move_draught(player_color, m, 1, captured_pos, game);
+	}
+	else {
+		move_draught(player_color, m, 0, captured_pos, game);
+	}
 	return 1;
 }
 
@@ -252,7 +273,8 @@ void move_draught(int player_color, movement m, int capture, square captured_pos
 	game->gameboard[m.startPoint.line][m.startPoint.column] = EMPTY_CELL;
 	game->gameboard[m.endPoint.line][m.endPoint.column] = 2 * player_color;
 	
-	if ( (capture==1) &&
+	if ( 
+		 (capture==1) &&
 		 ( (game->gameboard[captured_pos.line][captured_pos.column] == -player_color) ||
 		   (game->gameboard[captured_pos.line][captured_pos.column] == -player_color * 2) )
 	   ) {

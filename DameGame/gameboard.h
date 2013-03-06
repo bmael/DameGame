@@ -30,7 +30,7 @@ void init_gameboard(checkerboard* game);
  * 	Returns 1 if the movement is valid, 0 otherwise
  *
  */
-int test_movement(int player_color, movement m, checkerboard * game);
+// int test_movement(int player_color, movement m, checkerboard * game);
 
 /**
  * Test if a movement is valid, and execute it if it is
