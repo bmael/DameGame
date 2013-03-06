@@ -82,6 +82,28 @@ void init_gameboard(checkerboard* game){
 
 
 
+
+void affiche_choixcoup(listeCases* rafle, int n, int couleur, damier* jeu) {
+	int ok = 0;
+	int i;
+	char buffer[50];
+	do {
+		printf( "Plusieurs coups sont possibles %d : \n",n) ;
+		for(i=0 ;i<n ;i++) {
+			printf(" %d : ",i+1) ;
+			affiche_rafle(rafle[i]) ;
+		}
+		if(scanf( " %d ",&i) ==1 && i>0 && i<=n) {
+			faire_coup(rafle[i-1],couleur,jeu) ;
+			ok = 1 ;
+		}
+		//Vide le tampon
+		else fflush(stdin) ;
+	} while(ok == 0) ;
+}
+
+
+
 int test_movement(int player_color, movement m, checkerboard * game) {
     // The selected checker is not a player's checker
     if ( game->gameboard[m.startPoint.line][m.startPoint.column] != player_color ) {
@@ -168,11 +190,39 @@ int test_and_execute_movement_checker(int player_color, movement m, checkerboard
     }
 
     // Otherwise, the movement is valid
+    printf("\tINFO : valid movement\n");
     move_checker(player_color, m, 0, game);
     return 1;
 }
 
 
+
+int test_deplace_dame(damier* jeu, int couleur,deplacement d) {
+	int i = m.startPoint.line;
+	int j = m.startPoint.column;
+	
+	while ( i != m.endPoint.line || j != m.endPoint.column ) {
+		if( m.endPoint.line > m.startPoint.line ) {
+			i++;
+		}
+		else {
+			i--;
+		}
+		
+		if ( m.endPoint.column > m.startPoint.column ) {
+			j++;
+		}
+		else {
+			j--;
+		}
+	}
+	if( game->gameboard[i][j] != EMPTY_CELL ) {
+		printf("\tERROR : You can't move your draught to a square that is not empty\n");
+		return 0;
+	}
+	
+	return 1;
+}
 
 int test_and_execute_movement_draught(int player_color, movement m, checkerboard * game) {
 	return 1;
@@ -237,6 +287,18 @@ void promote_checkers(checkerboard * game, int player_color) {
 
 
 
+int is_square_valid(square s) {
+	if ( (s.line < 10) && (s.column < 10) ) {
+		return 1;
+	}
+	else {
+		printf("\tERROR : Out of bounds square!\n");
+		return 0;
+	}
+}
+
+
+
 int start_game(checkerboard * game) {
     movement m;
     square start;
@@ -249,12 +311,21 @@ int start_game(checkerboard * game) {
 
     while ( game_ended(game) == 0 ) {
 		do {
-			printf("Enter the checker you want to move:");
-			scanf("%d %d", &(start.line), &(start.column));
+			char c;
+			do {
+				printf("Enter the checker you want to move:");
+				scanf("%d%c", &(start.line), &c);
+				start.line--;
+				start.column = c - 97;
+			} while ( !is_square_valid(start) ) ;
 			m.startPoint = start;
 
-			printf("Enter the new position of this checker:");
-			scanf("%d %d", &(end.line), &(end.column));
+			do {
+				printf("Enter the new position of this checker:");
+				scanf("%d%c", &(end.line), &c);
+				end.line--;
+				end.column = c - 97;
+			} while ( !is_square_valid(end) ) ;
 			m.endPoint = end;
 		}
 		while( test_and_execute_movement(player_color, m, game) == 0 );
