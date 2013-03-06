@@ -83,24 +83,24 @@ void init_gameboard(checkerboard* game){
 
 
 
-void affiche_choixcoup(listeCases* rafle, int n, int couleur, damier* jeu) {
-	int ok = 0;
-	int i;
-	char buffer[50];
-	do {
-		printf( "Plusieurs coups sont possibles %d : \n",n) ;
-		for(i=0 ;i<n ;i++) {
-			printf(" %d : ",i+1) ;
-			affiche_rafle(rafle[i]) ;
-		}
-		if(scanf( " %d ",&i) ==1 && i>0 && i<=n) {
-			faire_coup(rafle[i-1],couleur,jeu) ;
-			ok = 1 ;
-		}
-		//Vide le tampon
-		else fflush(stdin) ;
-	} while(ok == 0) ;
-}
+// void affiche_choixcoup(listeCases* rafle, int n, int couleur, damier* jeu) {
+// 	int ok = 0;
+// 	int i;
+// 	char buffer[50];
+// 	do {
+// 		printf( "Plusieurs coups sont possibles %d : \n",n) ;
+// 		for(i=0 ;i<n ;i++) {
+// 			printf(" %d : ",i+1) ;
+// 			affiche_rafle(rafle[i]) ;
+// 		}
+// 		if(scanf( " %d ",&i) ==1 && i>0 && i<=n) {
+// 			faire_coup(rafle[i-1],couleur,jeu) ;
+// 			ok = 1 ;
+// 		}
+// 		//Vide le tampon
+// 		else fflush(stdin) ;
+// 	} while(ok == 0) ;
+// }
 
 
 
@@ -197,7 +197,7 @@ int test_and_execute_movement_checker(int player_color, movement m, checkerboard
 
 
 
-int test_deplace_dame(damier* jeu, int couleur,deplacement d) {
+int test_deplace_dame(checkerboard * game, int player_color, movement m) {
 	int i = m.startPoint.line;
 	int j = m.startPoint.column;
 	
