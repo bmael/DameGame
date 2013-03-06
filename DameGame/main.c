@@ -17,6 +17,8 @@ int main(void)
 
     printf("%d pions blancs\n", game->nb_white);
     printf("%d pions noirs\n", game->nb_black);
+	
+	free(game);
 
     return 0;
 }
