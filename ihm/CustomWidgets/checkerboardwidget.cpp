@@ -1,15 +1,18 @@
 #include "checkerboardwidget.h"
 #include "ui_checkerboardwidget.h"
 
+#include <QDebug>
+
 CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CheckerBoardWidget)
 {
     ui->setupUi(this);
 
+    firstClick = QPointF(-1,-1);
+    secondClick = QPointF(-1,-1);
+
     init();
-
-
 
 }
 
@@ -40,6 +43,7 @@ void CheckerBoardWidget::init()
         for(j=0;j<10;j++){
             if(board->gameboard[i][j] == BLACK_CHECKER){
                 CheckerObject * black = new CheckerObject(BLACK_CHECKER);
+                connect(black, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 black->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 black->setZValue(2);
                 blacks.append(black);
@@ -48,6 +52,7 @@ void CheckerBoardWidget::init()
 
             if(board->gameboard[i][j] == WHITE_CHECKER){
                 CheckerObject * white = new CheckerObject(WHITE_CHECKER);
+                connect(white, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 white->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 white->setZValue(2);
                 blacks.append(white);
@@ -56,6 +61,7 @@ void CheckerBoardWidget::init()
 
             if(board->gameboard[i][j] == EMPTY_CELL){
                 CheckerObject * empty = new CheckerObject(EMPTY_CELL);
+                connect(empty, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 empty->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 empty->setZValue(2);
                 empties.append(empty);
@@ -63,4 +69,23 @@ void CheckerBoardWidget::init()
             }
         }
     }
+}
+
+void CheckerBoardWidget::itemClicked(QPointF p)
+{
+    // If we do the first click
+    if(firstClick.x() == -1){
+        firstClick = QPointF(p.x()/CELL_SIZE, p.y()/CELL_SIZE);
+    }else{
+        // We do the second click
+        if(firstClick.x() != -1 && secondClick.x() == -1){
+            secondClick = QPointF(p.x()/CELL_SIZE, p.y()/CELL_SIZE);
+        }
+        else{
+            firstClick = QPointF(p.x()/CELL_SIZE, p.y()/CELL_SIZE);
+            secondClick = QPointF(-1,-1);
+        }
+    }
+    qDebug() << "First : " << firstClick;
+    qDebug() << "Second : " << secondClick;
 }

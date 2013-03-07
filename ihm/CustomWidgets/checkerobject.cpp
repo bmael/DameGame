@@ -47,7 +47,6 @@ void CheckerObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
 void CheckerObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    clickedAt = QPointF(this->x()/50, this->y()/50);
-    qDebug() << "Click at : " << clickedAt;
+    emit clicked(QPointF(this->x(), this->y()));
 }
 

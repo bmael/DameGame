@@ -32,7 +32,10 @@ public:
 
 private:
     void init();
-    
+
+private slots:
+    void itemClicked(QPointF p);
+
 private:
     Ui::CheckerBoardWidget *ui;
 
@@ -46,6 +49,9 @@ private:
 
 
     checkerboard * board;
+
+    QPointF firstClick;
+    QPointF secondClick;
 
 };
 
