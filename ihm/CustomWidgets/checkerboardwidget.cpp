@@ -6,8 +6,8 @@
 
 
 CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
-    QWidget(parent), player_color(BLACK_CHECKER),
-    ui(new Ui::CheckerBoardWidget)
+    QWidget(parent),
+    ui(new Ui::CheckerBoardWidget),  player_color(BLACK_CHECKER)
 {
     ui->setupUi(this);
 
@@ -44,19 +44,16 @@ void CheckerBoardWidget::move()
 //        whites.clear();
 //        blacks.clear();
 //        empties.clear();
-        clearList();
+        clearLists();
 
         qDebug() << "size of list : " << whites.size();
 
-        _scene->update(QRectF(firstClick.x()*CELL_SIZE, firstClick.y()*CELL_SIZE, CELL_SIZE, CELL_SIZE));
-        placeChecker();
+//        _scene->itemAt(firstClick.x()*CELL_SIZE, firstClick.y()*CELL_SIZE)->setPos(secondClick.x()*CELL_SIZE, secondClick.y()*CELL_SIZE);
+//        _scene->update(QRectF(firstClick.x()*CELL_SIZE, firstClick.y()*CELL_SIZE, CELL_SIZE, CELL_SIZE));
+        placeCheckers();
 
         //Change palyer
-//        if(player_color<0){
-//            player_color = WHITE_CHECKER;
-//        }else{
-//            player_color = BLACK_CHECKER;
-//        }
+        changePlayer();
         qDebug() << "next player is " << player_color;
 
     }
@@ -72,13 +69,13 @@ void CheckerBoardWidget::init()
     init_gameboard(board);
 
     //TODO fill QList
-    placeChecker();
+    placeCheckers();
 
     ui->checkerboardGraphicsView->setScene(_scene);
 
 }
 
-void CheckerBoardWidget::placeChecker()
+void CheckerBoardWidget::placeCheckers()
 {
     _checkerboard_o->setZValue(1);
     _scene->addItem(_checkerboard_o);
@@ -118,7 +115,7 @@ void CheckerBoardWidget::placeChecker()
     }
 }
 
-void CheckerBoardWidget::clearList()
+void CheckerBoardWidget::clearLists()
 {
     foreach(CheckerObject * o, whites){
         _scene->removeItem(o);
@@ -133,6 +130,15 @@ void CheckerBoardWidget::clearList()
             blacks.clear();
             empties.clear();
 
+}
+
+void CheckerBoardWidget::changePlayer()
+{
+    if(player_color<0){
+        player_color = WHITE_CHECKER;
+    }else{
+        player_color = BLACK_CHECKER;
+    }
 }
 
 void CheckerBoardWidget::itemClicked(QPointF p)

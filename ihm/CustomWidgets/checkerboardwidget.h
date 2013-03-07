@@ -34,14 +34,17 @@ public:
 
 private:
     void init();
-    void placeChecker();
-    void clearList();
+    void placeCheckers();
+    void clearLists();
+    void changePlayer();
 
 private slots:
     void itemClicked(QPointF p);
 
 private:
     Ui::CheckerBoardWidget *ui;
+
+    int player_color;
 
     QGraphicsScene * _scene;
 
@@ -57,7 +60,6 @@ private:
     QPointF firstClick;
     QPointF secondClick;
 
-    int player_color;
 
 };
 
