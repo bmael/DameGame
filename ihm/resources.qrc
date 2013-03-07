@@ -12,5 +12,7 @@
         <file alias="whitechecker">resources/icons/whitechacker.png</file>
         <file alias="blackchecker">resources/icons/blackchecker.png</file>
         <file alias="checkerboard">resources/icons/damier.gif</file>
+        <file alias="whitedaughter">resources/icons/whitedaughter.png</file>
+        <file alias="blackdaughter">resources/icons/blackdaughter.png</file>
     </qresource>
 </RCC>
