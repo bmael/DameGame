@@ -2,6 +2,8 @@
 #include "ui_checkerboardwidget.h"
 
 #include <QDebug>
+#include <QGraphicsEffect>
+
 
 CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
     QWidget(parent),
