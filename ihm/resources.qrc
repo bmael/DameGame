@@ -9,5 +9,8 @@
         <file alias="user">resources/icons/user.png</file>
         <file alias="free">resources/icons/freeUser.png</file>
         <file alias="busy">resources/icons/busyUser.png</file>
+        <file alias="whitechecker">resources/icons/whitechacker.png</file>
+        <file alias="blackchecker">resources/icons/blackchecker.png</file>
+        <file alias="checkerboard">resources/icons/damier.gif</file>
     </qresource>
 </RCC>
