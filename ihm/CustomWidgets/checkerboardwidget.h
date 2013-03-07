@@ -12,6 +12,7 @@
 #ifdef __cplusplus
 extern "C" {
 #include <DameGame/gameboard.h>
+#include <DameGame/include/structures.h>
 }
 #endif
 
@@ -28,6 +29,9 @@ class CheckerBoardWidget : public QWidget
 public:
     explicit CheckerBoardWidget(QWidget *parent = 0);
     ~CheckerBoardWidget();
+
+private:
+    void init();
     
 private:
     Ui::CheckerBoardWidget *ui;
