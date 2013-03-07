@@ -31,6 +31,7 @@ public:
     ~CheckerBoardWidget();
 
     void move();
+    void clear();
 
 private:
     void placeCheckers();

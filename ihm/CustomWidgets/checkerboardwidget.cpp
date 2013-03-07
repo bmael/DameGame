@@ -59,6 +59,11 @@ void CheckerBoardWidget::move()
     }
 }
 
+void CheckerBoardWidget::clear()
+{
+    _scene->clear();
+}
+
 void CheckerBoardWidget::init()
 {
     _scene = new QGraphicsScene(this);

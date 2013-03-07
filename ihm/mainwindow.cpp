@@ -132,6 +132,8 @@ void MainWindow::serverDisconnection()
         write_to_server(_player.socket, &f);
     }
 
+    ui->checkerboardwidget->clear();
+
     //Advising the server for the disconnection
     f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
     write_to_server(_player.socket,&f);
@@ -338,6 +340,9 @@ void MainWindow::opponentQuit(player p)
                         tr("Opponent quit"),
                         QString(p.name + tr(" has been disconnected from the server.")));
     infoBox.exec();
+
+    ui->checkerboardwidget->clear();
+
     emit askSetFree(_player);
 
 
