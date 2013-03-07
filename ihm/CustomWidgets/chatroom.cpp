@@ -36,3 +36,13 @@ void Chatroom::addText(QString msg)
     ui->chatTextBrowser->setText(ui->chatTextBrowser->toPlainText()+ "\n" + msg);
     ui->chatTextBrowser->verticalScrollBar()->setValue(ui->chatTextBrowser->verticalScrollBar()->maximum());
 }
+
+void Chatroom::on_chatTextEdit_textChanged()
+{
+    if(ui->chatTextEdit->toPlainText().size() > 1483){
+        ui->sendPushButton->setEnabled(false);
+    }
+    else{
+        ui->sendPushButton->setEnabled(true);
+    }
+}

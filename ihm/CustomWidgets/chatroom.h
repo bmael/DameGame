@@ -21,6 +21,8 @@ private slots:
     void on_sendPushButton_clicked();
     void addText(QString msg);
 
+    void on_chatTextEdit_textChanged();
+
 signals:
     void sendMessage(QString);
 
