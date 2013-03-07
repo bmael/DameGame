@@ -30,8 +30,12 @@ public:
     explicit CheckerBoardWidget(QWidget *parent = 0);
     ~CheckerBoardWidget();
 
+    void move();
+
 private:
     void init();
+    void placeChecker();
+    void clearList();
 
 private slots:
     void itemClicked(QPointF p);
@@ -52,6 +56,8 @@ private:
 
     QPointF firstClick;
     QPointF secondClick;
+
+    int player_color;
 
 };
 
