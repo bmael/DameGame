@@ -12,10 +12,10 @@ CheckerBoardObject::~CheckerBoardObject()
 
 QRectF CheckerBoardObject::boundingRect() const
 {
-    return QRectF(0, 0, 750, 750);
+    return QRectF(0, 0, 500, 500);
 }
 
 void CheckerBoardObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(QPointF(0, 0), _icon);
+    painter->drawPixmap(QPointF(0,0), _icon);
 }

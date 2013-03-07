@@ -30,7 +30,7 @@ void CheckerObject::setColor(int color)
 
 QRectF CheckerObject::boundingRect() const
 {
-    return QRectF(0, 0, 75, 75);
+    return QRectF(0, 0, 50, 50);
 }
 
 void CheckerObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

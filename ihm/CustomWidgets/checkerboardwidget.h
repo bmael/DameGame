@@ -9,7 +9,13 @@
 #include "checkerboardobject.h"
 #include "checkerobject.h"
 
-#define CELL_SIZE 75
+#ifdef __cplusplus
+extern "C" {
+#include <DameGame/gameboard.h>
+}
+#endif
+
+#define CELL_SIZE 50
 
 namespace Ui {
 class CheckerBoardWidget;
@@ -32,6 +38,8 @@ private:
 
     QList<CheckerObject*> whites;
     QList<CheckerObject*> blacks;
+
+    checkerboard * board;
 
 };
 
