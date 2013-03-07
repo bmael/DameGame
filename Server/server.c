@@ -7,6 +7,26 @@ Server to start before the clients
 
 #include "server.h"
 
+
+char *substr(char *src,int start,int end)
+{
+  //~ printf("SRC[%d:%d] : \"%s\" (%d)\n",start,end,src,(int)strlen(src));
+  int len=(end-start);
+  char *dest=0;
+  if(len>=0)
+  {
+  dest=(char*)calloc(len+1,sizeof(char));
+  strncat(dest,src+start,len);
+  if(strlen(dest)>len)
+  {
+  return substr(src,start,end);
+  }
+  }
+  //~ printf("Dest : \"%s\" (%d)\n",dest,(int)strlen(dest));
+  return dest;
+}
+
+
 void * client_manager_cmd(void * sock){
   int longueur;
   
@@ -126,8 +146,8 @@ void * client_manager_cmd(void * sock){
           else{i++;}
         }
         if(find){
-            players[j].color = 1;
-            players[i].color = -1;
+            players[j].color = -1;
+            players[i].color = 1;
             send_accept_new_game_request(new_socket_descriptor, players[j], players, cpt_players);
             send_accept_new_game_request(players[i].socket, players[i], players, cpt_players);
 
@@ -167,6 +187,19 @@ void * client_manager_cmd(void * sock){
 
         }
 
+    }
+    
+        /* action : OPPONENT_QUIT */
+    if(strcmp(f.data_type, SEND_GAMEBOARD) == 0){
+      
+        //char tmp[sizeof(checkerboard)];
+	board_frame bf = *((board_frame *)f.data);
+	
+	frame f2;
+	strcpy(f2.data_type, SEND_GAMEBOARD);
+	memcpy(f2.data, &bf.board, sizeof(bf.board));
+	write_to_client(bf.receiver.socket, &f2);
+	
     }
 
     pthread_mutex_unlock(&players_mutex);

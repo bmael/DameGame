@@ -31,5 +31,7 @@
 #define ADVISE_OPPONENT_QUIT "0014"
 #define CLIENT_FREE         "0015"
 
+#define SEND_GAMEBOARD      "0016"
+
 
 #endif

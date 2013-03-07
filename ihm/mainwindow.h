@@ -44,6 +44,8 @@ private slots:
     void setOpponent(player p);       // Init the opponent player of the client.
     void opponentQuit(player p);      // Advise the client that the opponent quit the game.
 
+    void sendCheckerboard(checkerboard c);  // Send the actual gameboard to the server.
+
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom
 
@@ -53,7 +55,9 @@ signals:
     void askSetBusy(player p);  // Emits when a game is starting
     void askSetFree(player p);  // Emits at the end of a game.
 
-    void initGame();            // Emits when a game start.
+    void changePlayerTurn(int color);
+
+    void initGame(player white, player black);  // Emits when a game start.
 
 private:
     void startListeners();      // Starts all listeners threads
@@ -73,6 +77,7 @@ private:
 
     player _player;             // the player
     player _opponent_player;    // the opponent player (Null if player is not in a game)
+    bool toSwapPlayer;
 
     /* Threads */
     Listener * _listener;

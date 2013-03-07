@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     strcpy(_player.name, "");
     _player.color = 0;
 
+    toSwapPlayer = false;
+
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
             this, SLOT(serverConnection(QString, int, QString)));
@@ -46,7 +48,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(askSetFree(player)), ui->rightMenuWidget, SIGNAL(askSetFree(player)));
 
     //Checkerboard
-    connect(this, SIGNAL(initGame()), ui->checkerboardwidget, SLOT(init()));
+    connect(this, SIGNAL(initGame(player, player)), ui->checkerboardwidget, SLOT(init(player, player)));
+    connect(ui->checkerboardwidget, SIGNAL(sendCheckerboard(checkerboard)), this, SLOT(sendCheckerboard(checkerboard)));
+    connect(this, SIGNAL(changePlayerTurn(int)), ui->checkerboardwidget, SLOT(changePlayer(int)));
 
 }
 
@@ -242,6 +246,8 @@ void MainWindow::startListeners()
     connect(_listener, SIGNAL(setOpponent(player)), this, SLOT(setOpponent(player)));
     connect(_listener, SIGNAL(opponentQuit(player)), this, SLOT(opponentQuit(player)));
 
+    connect(_listener, SIGNAL(receiveCheckerboard(checkerboard)), ui->checkerboardwidget, SLOT(receiveCheckerboard(checkerboard)));
+
 }
 
 /**
@@ -307,6 +313,7 @@ void MainWindow::adviseForGame(QString name)
             strcpy(f.data_type, ACCEPT_NEW_GAME);
             strcpy(f.data, (char*)name.toStdString().c_str());
             write_to_server(_player.socket, &f);
+            toSwapPlayer = true;
             break;
     }
 }
@@ -324,13 +331,22 @@ void MainWindow::startGame()
 {
     qDebug() << "[start_game] : starting the game";
     emit askSetBusy(_player);
-    emit initGame();
+
 }
 
 void MainWindow::setOpponent(player p)
 {
     qDebug() << "[set_opponent] : player " << p.name;
     _opponent_player = p;
+
+    if(!toSwapPlayer){
+        player tmp;
+        tmp.color = _player.color;
+        _player.color = _opponent_player.color;
+        _opponent_player.color = tmp.color;
+    }
+
+    _player.color < 1 ? emit initGame(_player, _opponent_player) : emit initGame(_opponent_player, _player);
 }
 
 void MainWindow::opponentQuit(player p)
@@ -346,4 +362,20 @@ void MainWindow::opponentQuit(player p)
     emit askSetFree(_player);
 
 
+}
+
+void MainWindow::sendCheckerboard(checkerboard c)
+{
+
+    board_frame bf;
+    bf.board = c;
+    bf.receiver = _opponent_player;
+
+    emit changePlayerTurn(_player.color);
+
+            frame f;
+            strcpy(f.data_type, SEND_GAMEBOARD);
+            memcpy(f.data, &bf, sizeof(bf));
+
+            write_to_server(_player.socket, &f);
 }

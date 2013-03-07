@@ -7,6 +7,8 @@ Listener::Listener(int socket_descriptor, QObject *parent) :
     QThread(parent), _socket_descriptor(socket_descriptor), stop(false)
 {
     qRegisterMetaType<player>("player");
+    qRegisterMetaType<checkerboard>("checkerboard");
+
     start();
 }
 
@@ -78,6 +80,11 @@ void Listener::run()
         if(strcmp(f.data_type,CLIENT_FREE) == 0){
             qDebug() << "[CLIENT_FREE] : " << f.data;
            emit clientFree(*((player *)f.data));
+       }
+
+        if(strcmp(f.data_type,SEND_GAMEBOARD) == 0){
+            qDebug() << "[SEND_GAMEBOARD] : " << f.data;
+           emit receiveCheckerboard(*((checkerboard*)f.data));
        }
 
     }

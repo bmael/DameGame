@@ -32,4 +32,9 @@ typedef struct {
 	square endPoint;	// End square of a movement
 } movement;
 
+typedef struct {
+    checkerboard board;
+    player receiver;
+} board_frame;
+
 #endif // STRUCTURE_H

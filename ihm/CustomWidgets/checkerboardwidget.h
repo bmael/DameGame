@@ -13,6 +13,7 @@
 extern "C" {
 #include <DameGame/gameboard.h>
 #include <DameGame/include/structures.h>
+#include <DameGame/include/client.h>
 }
 #endif
 
@@ -36,10 +37,14 @@ public:
 private:
     void placeCheckers();
     void clearLists();
-    void changePlayer();
+
+signals:
+    void sendCheckerboard(checkerboard);
 
 public slots:
-    void init();
+    void init(player white, player black);
+    void receiveCheckerboard(checkerboard c);
+    void changePlayer(int color);
 
 private slots:
     void itemClicked(QPointF p);
@@ -58,7 +63,7 @@ private:
     QList<CheckerObject*> empties;
 
 
-    checkerboard * board;
+    checkerboard board;
 
     QPointF firstClick;
     QPointF secondClick;
