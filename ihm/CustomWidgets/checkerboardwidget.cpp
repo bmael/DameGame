@@ -129,6 +129,9 @@ void CheckerBoardWidget::clearList()
     foreach(CheckerObject * o, empties){
         _scene->removeItem(o);
     }
+            whites.clear();
+            blacks.clear();
+            empties.clear();
 
 }
 
