@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QMouseEvent>
 
 class CheckerObject : public QGraphicsObject
 {
@@ -18,6 +19,7 @@ public:
     
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 signals:
     
 public slots:
@@ -26,6 +28,7 @@ public slots:
 private:
     QPixmap _icon;
     int color;
+    QPointF clickedAt;
 };
 
 #endif // CHECKEROBJECT_H

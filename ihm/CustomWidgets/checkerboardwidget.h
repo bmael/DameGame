@@ -42,6 +42,8 @@ private:
 
     QList<CheckerObject*> whites;
     QList<CheckerObject*> blacks;
+    QList<CheckerObject*> empties;
+
 
     checkerboard * board;
 

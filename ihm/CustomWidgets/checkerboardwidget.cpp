@@ -53,6 +53,14 @@ void CheckerBoardWidget::init()
                 blacks.append(white);
                 _scene->addItem(white);
             }
+
+            if(board->gameboard[i][j] == EMPTY_CELL){
+                CheckerObject * empty = new CheckerObject(EMPTY_CELL);
+                empty->setPos(CELL_SIZE*j, CELL_SIZE*i);
+                empty->setZValue(2);
+                empties.append(empty);
+                _scene->addItem(empty);
+            }
         }
     }
 }

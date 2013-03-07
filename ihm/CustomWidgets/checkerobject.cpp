@@ -1,5 +1,7 @@
 #include "checkerobject.h"
 
+#include <QDebug>
+
 CheckerObject::CheckerObject(int color, QGraphicsItem *parent) :
     QGraphicsObject(parent), color(color)
 {
@@ -16,6 +18,11 @@ void CheckerObject::setIcon()
         case 1:
             _icon = QPixmap(":/icons/blackchecker");
             break;
+
+        case 0:
+            _icon = QPixmap();
+            break;
+
         case -1:
             _icon = QPixmap(":/icons/whitechecker");
             break;
@@ -36,5 +43,11 @@ QRectF CheckerObject::boundingRect() const
 void CheckerObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPixmap(QPointF(0, 0), _icon);
+}
+
+void CheckerObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    clickedAt = QPointF(this->x()/50, this->y()/50);
+    qDebug() << "Click at : " << clickedAt;
 }
 
