@@ -53,6 +53,8 @@ signals:
     void askSetBusy(player p);  // Emits when a game is starting
     void askSetFree(player p);  // Emits at the end of a game.
 
+    void initGame();            // Emits when a game start.
+
 private:
     void startListeners();      // Starts all listeners threads
     void stopListeners();       // Stops all listeners threads

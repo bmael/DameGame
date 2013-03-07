@@ -33,10 +33,12 @@ public:
     void move();
 
 private:
-    void init();
     void placeCheckers();
     void clearLists();
     void changePlayer();
+
+public slots:
+    void init();
 
 private slots:
     void itemClicked(QPointF p);

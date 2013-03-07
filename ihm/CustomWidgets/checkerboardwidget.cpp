@@ -14,7 +14,7 @@ CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
     firstClick = QPointF(-1,-1);
     secondClick = QPointF(-1,-1);
 
-    init();
+    //init();
 
 }
 

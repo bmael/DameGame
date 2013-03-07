@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(askSetBusy(player)), ui->rightMenuWidget, SIGNAL(askSetBusy(player)));
     connect(this, SIGNAL(askSetFree(player)), ui->rightMenuWidget, SIGNAL(askSetFree(player)));
 
+    //Checkerboard
+    connect(this, SIGNAL(initGame()), ui->checkerboardwidget, SLOT(init()));
+
 }
 
 /**
@@ -319,6 +322,7 @@ void MainWindow::startGame()
 {
     qDebug() << "[start_game] : starting the game";
     emit askSetBusy(_player);
+    emit initGame();
 }
 
 void MainWindow::setOpponent(player p)
