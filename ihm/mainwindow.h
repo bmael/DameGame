@@ -77,7 +77,6 @@ private:
 
     player _player;             // the player
     player _opponent_player;    // the opponent player (Null if player is not in a game)
-    bool toSwapPlayer;
 
     /* Threads */
     Listener * _listener;

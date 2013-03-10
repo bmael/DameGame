@@ -27,8 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     strcpy(_player.name, "");
     _player.color = 0;
 
-    toSwapPlayer = false;
-
     // Connect Connection Widget with the window
     connect(ui->connectionWidget, SIGNAL(askConnection(QString, int, QString)),
             this, SLOT(serverConnection(QString, int, QString)));
@@ -313,7 +311,6 @@ void MainWindow::adviseForGame(QString name)
             strcpy(f.data_type, ACCEPT_NEW_GAME);
             strcpy(f.data, (char*)name.toStdString().c_str());
             write_to_server(_player.socket, &f);
-            toSwapPlayer = true;
             break;
     }
 }
@@ -339,14 +336,16 @@ void MainWindow::setOpponent(player p)
     qDebug() << "[set_opponent] : player " << p.name;
     _opponent_player = p;
 
-    if(!toSwapPlayer){
-        player tmp;
-        tmp.color = _player.color;
-        _player.color = _opponent_player.color;
-        _opponent_player.color = tmp.color;
+    if(_opponent_player.color == WHITE_CHECKER){
+        _player.color = BLACK_CHECKER;
+    }else{
+        _player.color = WHITE_CHECKER;
     }
 
-    _player.color < 1 ? emit initGame(_player, _opponent_player) : emit initGame(_opponent_player, _player);
+    qDebug() << "_player.color : " << _player.color;
+    qDebug() << "_popponent_player : " << _opponent_player.color;
+
+    _player.color == WHITE_CHECKER ? emit initGame(_player, _opponent_player) : emit initGame(_opponent_player, _player);
 }
 
 void MainWindow::opponentQuit(player p)
