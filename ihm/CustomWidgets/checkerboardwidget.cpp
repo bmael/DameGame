@@ -41,9 +41,9 @@ void CheckerBoardWidget::move()
         //Valid movement, do it for gui
         qDebug() << "movement is ok";
 
-        clearLists();
+        clearLists();   // Clear all the gui gameboard
 
-        placeCheckers();
+        placeCheckers(); // Reconstruct the new GUI gameboard
 
         //Change palyer
         //changePlayer();
@@ -60,21 +60,20 @@ void CheckerBoardWidget::clear()
     _scene->clear();
 }
 
-void CheckerBoardWidget::init(player white, player black)
+void CheckerBoardWidget::loadInformation()
 {
-    _scene = new QGraphicsScene(this);
+    white_player = new QGraphicsPixmapItem(QPixmap(":/icons/whitechecker"));
+    black_player = new QGraphicsPixmapItem(QPixmap(":/icons/blackchecker"));
 
-    QGraphicsItem * white_player = new QGraphicsPixmapItem(QPixmap(":/icons/whitechecker"));
-    QGraphicsItem * black_player = new QGraphicsPixmapItem(QPixmap(":/icons/blackchecker"));
-
-    QGraphicsItem * white_name = new QGraphicsTextItem(white.name);
-    QGraphicsItem * black_name = new QGraphicsTextItem(black.name);
-
-    QGraphicsItem * turn_player;
-    if(player_color == WHITE_CHECKER) {
-        turn_player = new QGraphicsTextItem(QString(QString::fromStdString(white.name) + tr(" turn")));
-    }else{
-        turn_player = new QGraphicsTextItem(QString(QString::fromStdString(black.name) + tr(" turn")));
+    if(_player.color == WHITE_CHECKER){
+        white_name = new QGraphicsTextItem(_player.name);
+        black_name = new QGraphicsTextItem(_opponent_player.name);
+        turn_player = new QGraphicsTextItem(QString(QString::fromStdString(_player.name) + tr(" turn")));
+    }
+    else{
+        white_name = new QGraphicsTextItem(_opponent_player.name);
+        black_name = new QGraphicsTextItem(_player.name);
+        turn_player = new QGraphicsTextItem(QString(QString::fromStdString(_opponent_player.name) + tr(" turn")));
     }
 
     white_player->setPos(-200,0);
@@ -93,9 +92,25 @@ void CheckerBoardWidget::init(player white, player black)
 
     _scene->addItem(turn_player);
 
-    init_gameboard(&board);
+}
 
-    //TODO fill QList
+void CheckerBoardWidget::init(player p, player opponent)
+{
+    _scene = new QGraphicsScene(this);
+
+//    pwhite = p;
+//    pblack = opponent;
+    _player = p;
+    _opponent_player = opponent;
+
+    loadInformation();
+
+    _checkerboard_o = new CheckerBoardObject;
+    _checkerboard_o->setZValue(1);
+    _scene->addItem(_checkerboard_o);
+    _checkerboard_o->setPos(0,0);
+
+    init_gameboard(&board);
     placeCheckers();
 
     ui->checkerboardGraphicsView->setScene(_scene);
@@ -105,24 +120,22 @@ void CheckerBoardWidget::init(player white, player black)
 void CheckerBoardWidget::receiveCheckerboard(checkerboard c)
 {
     board = c;
-    this->clear();
+    clearLists();
+    //this->clear();
+    changePlayer();
     placeCheckers();
 }
 
 void CheckerBoardWidget::placeCheckers()
 {
-    _checkerboard_o = new CheckerBoardObject;
-    _checkerboard_o->setZValue(1);
-    _scene->addItem(_checkerboard_o);
-    _checkerboard_o->setPos(0,0);
-
     int i;
     int j;
     for(i=0;i<10;i++){
         for(j=0;j<10;j++){
             if(board.gameboard[i][j] == BLACK_CHECKER){
                 CheckerObject * black = new CheckerObject(BLACK_CHECKER);
-                connect(black, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+                if(player_color == BLACK_CHECKER && _player.color == BLACK_CHECKER)
+                    connect(black, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 black->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 black->setZValue(2);
                 blacks.append(black);
@@ -131,7 +144,8 @@ void CheckerBoardWidget::placeCheckers()
 
             if(board.gameboard[i][j] == WHITE_CHECKER){
                 CheckerObject * white = new CheckerObject(WHITE_CHECKER);
-                connect(white, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+                if(player_color == WHITE_CHECKER && _player.color == WHITE_CHECKER)
+                    connect(white, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 white->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 white->setZValue(2);
                 blacks.append(white);
@@ -140,7 +154,8 @@ void CheckerBoardWidget::placeCheckers()
 
             if(board.gameboard[i][j] == EMPTY_CELL){
                 CheckerObject * empty = new CheckerObject(EMPTY_CELL);
-                connect(empty, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+                if(_player.color == player_color)
+                    connect(empty, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 empty->setPos(CELL_SIZE*j, CELL_SIZE*i);
                 empty->setZValue(2);
                 empties.append(empty);
@@ -161,33 +176,21 @@ void CheckerBoardWidget::clearLists()
     foreach(CheckerObject * o, empties){
         _scene->removeItem(o);
     }
-            whites.clear();
-            blacks.clear();
-            empties.clear();
+
+    whites.clear();
+    blacks.clear();
+    empties.clear();
 
 }
 
-void CheckerBoardWidget::changePlayer(int color)
+void CheckerBoardWidget::changePlayer()
 {
     if(player_color == BLACK_CHECKER){
-        player_color = WHITE_CHECKER;
+        player_color = WHITE_CHECKER;   
     }else{
         player_color = BLACK_CHECKER;
     }
-    if ( player_color == color ) {
-        qDebug() << "MYYYYYY TUUUUURRRRRRNNNNNNNNNN";
-    }
-    else{
-        foreach(CheckerObject * o, whites){
-            disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
-        }
-        foreach(CheckerObject * o, blacks){
-            disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
-        }
-        foreach(CheckerObject * o, empties){
-            disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
-        }
-    }
+
 }
 
 void CheckerBoardWidget::itemClicked(QPointF p)
@@ -206,6 +209,4 @@ void CheckerBoardWidget::itemClicked(QPointF p)
             secondClick = QPointF(-1,-1);
         }
     }
-    qDebug() << "First : " << firstClick;
-    qDebug() << "Second : " << secondClick;
 }

@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Checkerboard
     connect(this, SIGNAL(initGame(player, player)), ui->checkerboardwidget, SLOT(init(player, player)));
     connect(ui->checkerboardwidget, SIGNAL(sendCheckerboard(checkerboard)), this, SLOT(sendCheckerboard(checkerboard)));
-    connect(this, SIGNAL(changePlayerTurn(int)), ui->checkerboardwidget, SLOT(changePlayer(int)));
+    //connect(this, SIGNAL(changePlayerTurn(int)), ui->checkerboardwidget, SLOT(changePlayer(int)));
 
 }
 
@@ -345,7 +345,7 @@ void MainWindow::setOpponent(player p)
     qDebug() << "_player.color : " << _player.color;
     qDebug() << "_popponent_player : " << _opponent_player.color;
 
-    _player.color == WHITE_CHECKER ? emit initGame(_player, _opponent_player) : emit initGame(_opponent_player, _player);
+    emit initGame(_player, _opponent_player);
 }
 
 void MainWindow::opponentQuit(player p)
@@ -370,7 +370,7 @@ void MainWindow::sendCheckerboard(checkerboard c)
     bf.board = c;
     bf.receiver = _opponent_player;
 
-    emit changePlayerTurn(_player.color);
+    //emit changePlayerTurn(_player.color);
 
             frame f;
             strcpy(f.data_type, SEND_GAMEBOARD);
