@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QMouseEvent>
+#include <QGraphicsColorizeEffect>
 
 class CheckerObject : public QGraphicsObject
 {
@@ -21,6 +22,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
+    void setEffectEnabled(bool enable);
+
 signals:
     void clicked(QPointF);
     
@@ -28,6 +31,7 @@ public slots:
     
 
 private:
+    QGraphicsColorizeEffect * e;
     QPixmap _icon;
     int color;
 

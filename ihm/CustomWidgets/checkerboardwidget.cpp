@@ -14,6 +14,8 @@ CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
     firstClick = QPointF(-1,-1);
     secondClick = QPointF(-1,-1);
 
+
+
     //init();
 
 }
@@ -227,10 +229,18 @@ void CheckerBoardWidget::itemClicked(QPointF p)
     // If we do the first click
     if(firstClick.x() == -1){
         firstClick = QPointF(p.x()/CELL_SIZE, p.y()/CELL_SIZE);
+        CheckerObject * it = (CheckerObject *)_scene->itemAt(firstClick.x()*CELL_SIZE, firstClick.y()*CELL_SIZE);
+        it->setEffectEnabled(true);
     }else{
         // We do the second click
         if(firstClick.x() != -1 && secondClick.x() == -1){
             secondClick = QPointF(p.x()/CELL_SIZE, p.y()/CELL_SIZE);
+            CheckerObject * it = (CheckerObject *)_scene->itemAt(firstClick.x()*CELL_SIZE, firstClick.y()*CELL_SIZE);
+            it->setEffectEnabled(false);
+
+            it = (CheckerObject *)_scene->itemAt(secondClick.x()*CELL_SIZE, secondClick.y()*CELL_SIZE);
+            it->setEffectEnabled(false);
+
             move();
         }
         else{

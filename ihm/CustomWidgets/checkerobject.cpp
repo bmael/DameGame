@@ -5,6 +5,11 @@
 CheckerObject::CheckerObject(int color, QGraphicsItem *parent) :
     QGraphicsObject(parent), color(color)
 {
+    e = new QGraphicsColorizeEffect();
+    e->setColor(QColor(255,255,255,20));
+    this->setGraphicsEffect(e);
+    this->setEffectEnabled(false);
+
     setIcon();
 }
 
@@ -56,5 +61,10 @@ void CheckerObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 void CheckerObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     emit clicked(QPointF(this->x(), this->y()));
+}
+
+void CheckerObject::setEffectEnabled(bool enable)
+{
+    this->graphicsEffect()->setEnabled(enable);
 }
 
