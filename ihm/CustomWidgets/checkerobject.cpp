@@ -15,6 +15,10 @@ CheckerObject::~CheckerObject()
 void CheckerObject::setIcon()
 {
     switch(color){
+        case 2:
+            _icon = QPixmap(":/icons/blackdaughter");
+            break;
+
         case 1:
             _icon = QPixmap(":/icons/blackchecker");
             break;
@@ -25,6 +29,10 @@ void CheckerObject::setIcon()
 
         case -1:
             _icon = QPixmap(":/icons/whitechecker");
+            break;
+
+        case -2:
+            _icon = QPixmap(":/icons/whitedaughter");
             break;
     }
 }

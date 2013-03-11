@@ -14,5 +14,9 @@
         <file alias="checkerboard">resources/icons/damier.gif</file>
         <file alias="whitedaughter">resources/icons/whitedaughter.png</file>
         <file alias="blackdaughter">resources/icons/blackdaughter.png</file>
+        <file alias="blackcheckerclicked">resources/icons/blackcheckerclicked.png</file>
+        <file alias="blackdaughterclicked">resources/icons/blackdaughterclicked.png</file>
+        <file alias="whitedaughterclicked">resources/icons/whitedaughterclicked.png</file>
+        <file alias="whitecheckerclicked">resources/icons/whitechackerclicked.png</file>
     </qresource>
 </RCC>
