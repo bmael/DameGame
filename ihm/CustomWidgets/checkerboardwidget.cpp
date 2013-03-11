@@ -47,6 +47,15 @@ void CheckerBoardWidget::move()
 
         placeCheckers(); // Reconstruct the new GUI gameboard
 
+        //Check if there is a winner
+        if(game_ended(&board) == BLACK_CHECKER){
+            _player.color == BLACK_CHECKER ? emit sendWinner(_player) : emit sendWinner(_opponent_player);
+        }
+        if(game_ended(&board) == WHITE_CHECKER){
+            _player.color == WHITE_CHECKER ? emit sendWinner(_opponent_player) : emit sendWinner(_player);
+        }
+
+
         preventAction(player_color);
         changePlayer();
 

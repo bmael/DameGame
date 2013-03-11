@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Checkerboard
     connect(this, SIGNAL(initGame(player, player)), ui->checkerboardwidget, SLOT(init(player, player)));
     connect(ui->checkerboardwidget, SIGNAL(sendCheckerboard(checkerboard)), this, SLOT(sendCheckerboard(checkerboard)));
+    connect(ui->checkerboardwidget, SIGNAL(sendWinner(player)), this, SLOT(adviseWinner(player)));
     //connect(this, SIGNAL(changePlayerTurn(int)), ui->checkerboardwidget, SLOT(changePlayer(int)));
 
 }
@@ -245,7 +246,7 @@ void MainWindow::startListeners()
     connect(_listener, SIGNAL(opponentQuit(player)), this, SLOT(opponentQuit(player)));
 
     connect(_listener, SIGNAL(receiveCheckerboard(checkerboard)), ui->checkerboardwidget, SLOT(receiveCheckerboard(checkerboard)));
-
+    connect(_listener, SIGNAL(receiveWinner(player)), this, SLOT(displayWinner(player)));
 }
 
 /**
@@ -370,11 +371,32 @@ void MainWindow::sendCheckerboard(checkerboard c)
     bf.board = c;
     bf.receiver = _opponent_player;
 
-    //emit changePlayerTurn(_player.color);
+    frame f;
+    strcpy(f.data_type, SEND_GAMEBOARD);
+    memcpy(f.data, &bf, sizeof(bf));
 
-            frame f;
-            strcpy(f.data_type, SEND_GAMEBOARD);
-            memcpy(f.data, &bf, sizeof(bf));
+    write_to_server(_player.socket, &f);
+}
 
-            write_to_server(_player.socket, &f);
+void MainWindow::adviseWinner(player p)
+{
+    QMessageBox infoBox(QMessageBox::Information,
+                        tr("And the winner is..."),
+                        QString(p.name + tr(" wins this game.")));
+    infoBox.exec();
+
+    frame f;
+    strcpy(f.data_type, SEND_WINNER);
+    strcpy(f.data, _opponent_player.name);
+
+    write_to_server(_player.socket, &f);
+
+}
+
+void MainWindow::displayWinner(player p)
+{
+    QMessageBox infoBox(QMessageBox::Information,
+                        tr("And the winner is..."),
+                        QString(p.name + tr(" wins this game.")));
+    infoBox.exec();
 }

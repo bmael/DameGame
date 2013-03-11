@@ -35,6 +35,7 @@ signals:
     void opponentQuit(player p);
 
     void receiveCheckerboard(checkerboard c);
+    void receiveWinner(player p);
 
 
 public slots:

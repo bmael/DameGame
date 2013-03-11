@@ -185,6 +185,34 @@ void * client_manager_cmd(void * sock){
 	
     }
 
+    if(strcmp(f.data_type, SEND_WINNER) == 0){
+
+        //the player whose win
+        int j = 0;
+        int ok = 0;
+        while((!ok) && (j < cpt_players)){
+            if(players[j].socket == new_socket_descriptor){ok = 1;}
+            else{j++;}
+        }
+
+        //the player to advise
+        int i = 0;
+        int find = 0;
+        while((!find) && (i < cpt_players)){
+          if(strcmp(players[i].name, f.data) == 0){find=1;}
+          else{i++;}
+        }
+        if(find){
+            frame f2;
+            strcpy(f2.data_type, SEND_WINNER);
+            memcpy(f2.data, &players[j], sizeof(players[j]));
+            write_to_client(players[i].socket, &f2);
+        }
+
+
+
+    }
+
     pthread_mutex_unlock(&players_mutex);
 
     

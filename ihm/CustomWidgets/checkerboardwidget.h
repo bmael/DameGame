@@ -42,6 +42,7 @@ private:
 
 signals:
     void sendCheckerboard(checkerboard);
+    void sendWinner(player);
 
 public slots:
     void init(player p, player opponent);

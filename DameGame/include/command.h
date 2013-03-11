@@ -32,6 +32,7 @@
 #define CLIENT_FREE         "0015"
 
 #define SEND_GAMEBOARD      "0016"
+#define SEND_WINNER         "0017"
 
 
 #endif

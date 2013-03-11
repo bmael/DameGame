@@ -45,6 +45,8 @@ private slots:
     void opponentQuit(player p);      // Advise the client that the opponent quit the game.
 
     void sendCheckerboard(checkerboard c);  // Send the actual gameboard to the server.
+    void adviseWinner(player p);      // Advise the client that there is a winner and transmit it to the server.
+    void displayWinner(player p);     // Advise the client that there is a winner
 
 signals:
     void askAddMsg(QString);    // Emits when the user wants to send a message on the chatroom

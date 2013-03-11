@@ -87,6 +87,11 @@ void Listener::run()
            emit receiveCheckerboard(*((checkerboard*)f.data));
        }
 
+        if(strcmp(f.data_type,SEND_WINNER) == 0){
+            qDebug() << "[SEND_WINNER] : " << f.data;
+           emit receiveWinner(*((player*)f.data));
+       }
+
     }
 }
 
