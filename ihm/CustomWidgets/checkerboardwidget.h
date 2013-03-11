@@ -38,6 +38,7 @@ private:
     void loadInformation();
     void placeCheckers();
     void clearLists();
+    void preventAction(int color);
 
 signals:
     void sendCheckerboard(checkerboard);
@@ -57,13 +58,13 @@ private:
 
     QGraphicsScene * _scene;
 
-    QGraphicsItem * white_player;
-    QGraphicsItem * black_player;
+    QGraphicsPixmapItem * white_player;
+    QGraphicsPixmapItem * black_player;
 
-    QGraphicsItem * white_name;
-    QGraphicsItem * black_name;
+    QGraphicsTextItem * white_name;
+    QGraphicsTextItem * black_name;
 
-    QGraphicsItem * turn_player;
+    QGraphicsTextItem * turn_player;
 
     CheckerBoardObject * _checkerboard_o;
 
@@ -71,10 +72,8 @@ private:
     QList<CheckerObject*> blacks;
     QList<CheckerObject*> empties;
 
-
     checkerboard board;
-    player pwhite;  //delete this
-    player pblack;  //delete this
+
     player _player;
     player _opponent_player;
 

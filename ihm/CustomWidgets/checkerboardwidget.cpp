@@ -45,8 +45,8 @@ void CheckerBoardWidget::move()
 
         placeCheckers(); // Reconstruct the new GUI gameboard
 
-        //Change palyer
-        //changePlayer();
+        preventAction(player_color);
+        changePlayer();
 
 //        qDebug() << "ppppppppppppppppppppppppppppppp" << (char *) board;
         emit sendCheckerboard(board);
@@ -128,6 +128,9 @@ void CheckerBoardWidget::receiveCheckerboard(checkerboard c)
 
 void CheckerBoardWidget::placeCheckers()
 {
+
+    qDebug() << "color that have to play : " << player_color;
+
     int i;
     int j;
     for(i=0;i<10;i++){
@@ -183,12 +186,38 @@ void CheckerBoardWidget::clearLists()
 
 }
 
+void CheckerBoardWidget::preventAction(int color)
+{
+    if(color == WHITE_CHECKER){
+        foreach(CheckerObject * o, whites){
+            disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+        }
+    }else{
+        foreach(CheckerObject * o, blacks){
+            disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+        }
+    }
+
+    foreach(CheckerObject * o, empties){
+        disconnect(o, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+    }
+
+}
+
 void CheckerBoardWidget::changePlayer()
 {
+    qDebug() << "[CHANGE PLAYER]";
     if(player_color == BLACK_CHECKER){
         player_color = WHITE_CHECKER;   
     }else{
         player_color = BLACK_CHECKER;
+    }
+
+    if(player_color == _player.color){
+        turn_player->setPlainText(QString(QString::fromStdString(_player.name) + tr(" turn")));
+    }
+    else{
+        turn_player->setPlainText(QString(QString::fromStdString(_opponent_player.name) + tr(" turn")));
     }
 
 }
