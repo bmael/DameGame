@@ -43,6 +43,8 @@ void CheckerBoardWidget::move()
         //Valid movement, do it for gui
         qDebug() << "movement is ok";
 
+        promote_checkers(&board, player_color);   //Check if daughter is made
+
         clearLists();   // Clear all the gui gameboard
 
         placeCheckers(); // Reconstruct the new GUI gameboard
@@ -156,8 +158,28 @@ void CheckerBoardWidget::placeCheckers()
                 _scene->addItem(black);
             }
 
+            if(board.gameboard[i][j] == BLACK_DRAUGHT){
+                CheckerObject * black = new CheckerObject(BLACK_DRAUGHT);
+                if(player_color == BLACK_CHECKER && _player.color == BLACK_CHECKER)
+                    connect(black, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+                black->setPos(CELL_SIZE*j, CELL_SIZE*i);
+                black->setZValue(2);
+                blacks.append(black);
+                _scene->addItem(black);
+            }
+
             if(board.gameboard[i][j] == WHITE_CHECKER){
                 CheckerObject * white = new CheckerObject(WHITE_CHECKER);
+                if(player_color == WHITE_CHECKER && _player.color == WHITE_CHECKER)
+                    connect(white, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
+                white->setPos(CELL_SIZE*j, CELL_SIZE*i);
+                white->setZValue(2);
+                blacks.append(white);
+                _scene->addItem(white);
+            }
+
+            if(board.gameboard[i][j] == WHITE_DRAUGHT){
+                CheckerObject * white = new CheckerObject(WHITE_DRAUGHT);
                 if(player_color == WHITE_CHECKER && _player.color == WHITE_CHECKER)
                     connect(white, SIGNAL(clicked(QPointF)), this, SLOT(itemClicked(QPointF)));
                 white->setPos(CELL_SIZE*j, CELL_SIZE*i);

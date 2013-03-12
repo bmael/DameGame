@@ -61,7 +61,8 @@ void PlayersOnline::doubleClickedItem(QModelIndex i)
 {
     player p;
     strcpy(p.name, (char*)_model->item(i.row())->text().toStdString().c_str());
-    qDebug() << "[Double_Clicked_item] : icone name : " << _model->item(i.row())->data();
+
+    // Can't ask for a game with busy player
     if(_model->item(i.row())->data() != "busy" ){
         emit askNewGameWith(p);
     }

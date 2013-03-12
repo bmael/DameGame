@@ -343,9 +343,6 @@ void MainWindow::setOpponent(player p)
         _player.color = WHITE_CHECKER;
     }
 
-    qDebug() << "_player.color : " << _player.color;
-    qDebug() << "_popponent_player : " << _opponent_player.color;
-
     emit initGame(_player, _opponent_player);
 }
 
@@ -360,7 +357,6 @@ void MainWindow::opponentQuit(player p)
     ui->checkerboardwidget->clear();
 
     emit askSetFree(_player);
-
 
 }
 
