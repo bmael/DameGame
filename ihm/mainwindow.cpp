@@ -165,7 +165,10 @@ void MainWindow::pseudoAlreadyExists(QString pseudo)
     QMessageBox box(QMessageBox::Information,tr("Pseudo already exists"),QString(tr("Pseudo ") + pseudo + tr(" already exists. Please choose another.")));
     box.exec();
 
-    this->serverDisconnection();
+    ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);
+    emit askRmPlayer(_player);
+
+    //this->serverDisconnection();
 }
 
 /**
