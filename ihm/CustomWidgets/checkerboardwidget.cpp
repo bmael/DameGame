@@ -16,6 +16,8 @@ CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
 
     _scene = new QGraphicsScene(this);
 
+    qDebug() << "NEEEEWWWWWWWWWW CHECKERBOARD OHHHH yEAHHHHHHH !!!!";
+
     //init();
 
 }
@@ -63,8 +65,6 @@ void CheckerBoardWidget::move()
 
 //        qDebug() << "ppppppppppppppppppppppppppppppp" << (char *) board;
         emit sendCheckerboard(board);
-
-
     }
 }
 

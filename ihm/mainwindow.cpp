@@ -121,10 +121,10 @@ void MainWindow::serverConnection(QString host, int port, QString pseudo)
  */
 void MainWindow::serverDisconnection()
 {
-    // cleaning the connection page
+    // cleaning the gui
     ui->connectionWidget->clean();
-
     ui->rightMenuWidget->clear();
+    ui->checkerboardwidget->clear();
 
     frame f ;
     //Advise the opponent if the client is in a game
@@ -135,7 +135,6 @@ void MainWindow::serverDisconnection()
         write_to_server(_player.socket, &f);
     }
 
-    ui->checkerboardwidget->clear();
 
     //Advising the server for the disconnection
     f = make_frame(_local_addr.sin_addr, _local_addr.sin_addr, DISCONNECT, _player.name);
@@ -151,6 +150,14 @@ void MainWindow::serverDisconnection()
 
     // When the client is disconnected, display the connection page
     ui->stackedWidget->slideInIdx(0, SlidingStackedWidget::TOP2BOTTOM);
+
+    strcpy(_player.name, "");
+    _player.color = 0;
+    strcpy(_opponent_player.name, "");
+    _opponent_player.color = 0;
+
+
+
 }
 
 void MainWindow::pseudoAlreadyExists(QString pseudo)
@@ -265,7 +272,7 @@ void MainWindow::stopListeners()
  */
 void MainWindow::createGame(player other)
 {
-    if(strcmp(_player.name, other.name) != 0 && _player.color == 0 && strlen(_opponent_player.name) == 0 ){
+    if(strcmp(_player.name, other.name) != 0 && _player.color == 0 /*&& strlen(_opponent_player.name) == 0*/ ){
         qDebug() << "[Create_game] : creating game with " << other.name;
 
         QMessageBox box(QMessageBox::Information,tr("Starting a game"),QString(tr("Are you sure to start a game with ") + other.name), QMessageBox::Yes | QMessageBox::No);
@@ -273,10 +280,10 @@ void MainWindow::createGame(player other)
         switch(res){
             case QMessageBox::Yes:
 
-                frame f;
-                strcpy(f.data_type, ASK_NEW_GAME);
-                strcpy(f.data, other.name);
-                write_to_server(_player.socket, &f);
+            frame f;
+            strcpy(f.data_type, ASK_NEW_GAME);
+            strcpy(f.data, other.name);
+            write_to_server(_player.socket, &f);
 
                 QMessageBox infoBox(QMessageBox::Information,
                                 tr("Request sent"),
@@ -348,18 +355,19 @@ void MainWindow::setOpponent(player p)
 
 void MainWindow::opponentQuit(player p)
 {
+    ui->checkerboardwidget->clear();
+
+    // Reset players
     strcpy(_opponent_player.name, "");
+    _opponent_player.color = 0;
+    _player.color = 0;
+
     QMessageBox infoBox(QMessageBox::Information,
                         tr("Opponent quit"),
                         QString(p.name + tr(" has been disconnected from the server.")));
     infoBox.exec();
 
-    ui->checkerboardwidget->clear();
-
     emit askSetFree(_player);
-
-    _player.color = 0;
-    _opponent_player.color = 0;
 
 }
 
