@@ -39,7 +39,7 @@ void Chatroom::addText(QString msg)
 
 void Chatroom::on_chatTextEdit_textChanged()
 {
-    if(ui->chatTextEdit->toPlainText().size() > 1483){
+    if(ui->chatTextEdit->toPlainText().size() > 1400){
         ui->sendPushButton->setEnabled(false);
     }
     else{
