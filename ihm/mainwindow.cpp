@@ -358,6 +358,9 @@ void MainWindow::opponentQuit(player p)
 
     emit askSetFree(_player);
 
+    _player.color = 0;
+    _opponent_player.color = 0;
+
 }
 
 void MainWindow::sendCheckerboard(checkerboard c)

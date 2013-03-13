@@ -14,7 +14,7 @@ CheckerBoardWidget::CheckerBoardWidget(QWidget *parent) :
     firstClick = QPointF(-1,-1);
     secondClick = QPointF(-1,-1);
 
-
+    _scene = new QGraphicsScene(this);
 
     //init();
 
@@ -109,7 +109,6 @@ void CheckerBoardWidget::loadInformation()
 
 void CheckerBoardWidget::init(player p, player opponent)
 {
-    _scene = new QGraphicsScene(this);
 
 //    pwhite = p;
 //    pblack = opponent;
