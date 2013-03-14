@@ -24,7 +24,7 @@ typedef struct servent servent;
 
 /******************************** GLOBALS *************************************/
 
-int cpt_max_client = 3;		/* Size of the max client for the realloc function */
+int cpt_max_client = 10;		/* Size of the max client for the realloc function */
 
 player *players;		/* Array of connected players */
 int cpt_players = 0;		/* Number of connected players */
